@@ -185,21 +185,18 @@ cpsupgrade4.place(x=27, y=560)
 
 
 def center_label(label, window_width, y_position):
-    label.update_idletasks()  # Update the label to get its width
+    label.update_idletasks()  
     label_width = label.winfo_width()
-    x_position = (window_width - label_width) // 2  # Center horizontally
+    x_position = (window_width - label_width) // 2  
     label.place(x=x_position, y=y_position)
 
-# Update positions for the labels
-window_width = 950  # The width of your window
 
-# Position Wonderhoyammount (Click Counter)
+window_width = 950  # width of window
+
+
 center_label(Wonderhoyammount, window_width, 50)
 
-# Position wpslabel (WPS Label)
 center_label(wpslabel, window_width, 160)
-
-# Position cpslabel (Clicks Label)
 
 center_label(cpslabel, window_width, 182)
 
