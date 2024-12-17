@@ -264,9 +264,6 @@ upgr = Label(window, text="WPS\nUpgrades", font=("Arial", 25, 'bold'), fg='#e236
 upgr.place(x=750, y=100)
 upgrade1 = Button(window, command=firstupgr, text=f"Emu Helper = {firstupgrpay} WH\nadds 2 WPS", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 upgrade1.place(x=740, y=200)
-emuchibiparent = PhotoImage(file="Images/Emu_Casual_chibi.png")
-emuchibi = Label(window, image=emuchibiparent, background="Pink")
-emuchibi.place(x=624, y=185)
 upgrade2 = Button(window, text=f"Tsukasa Helper\n{scndupgrpay} WH\nadds 5 WPS", command=scndupgr, bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 upgrade2.place(x=740, y=320)
 upgrade3 = Button(window, text=f"Nene Helper\n{thrdupgrpay} WH\n\nadds 15 WPS", command=thrdupgr, bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
@@ -292,6 +289,20 @@ version = Label(window, text= "Game Currently\nbreaks formatting\nafter Trillion
 version.place(x=35, y=10)
 nextup = Label(window, text= "Next up:\n InfVersion.\nBetter Upgrades", background="pink", font= ("Arial", 10, "bold"))
 nextup.place(x=777, y=10)
+
+#chibi GUI
+emuchibiparent = PhotoImage(file="Images/Emu_Casual_chibi.png")
+emuchibi = Label(window, image=emuchibiparent, background="Pink")
+emuchibi.place(x=624, y=185)
+tsukasachibiparent = PhotoImage(file="Images\Tsukasa_Casual_chibi.png")
+tsukasachibi = Label(window, image= tsukasachibiparent, background="Pink")
+tsukasachibi.place(x=624, y=300)
+nenechibiparent = PhotoImage(file="Images\ene_Casual_chibi.png")
+nenechibi = Label(window, image= nenechibiparent, background='Pink')
+nenechibi.place(x=624, y=415)
+ruichibiparent = PhotoImage(file="Images\download.png")
+ruichibi = Label(window, image = ruichibiparent, background="Pink")
+ruichibi.place(x=624, y=530)
 
 
 
