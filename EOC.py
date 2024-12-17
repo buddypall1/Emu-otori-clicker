@@ -16,6 +16,9 @@ frthupgrpay = 1000000
 
 # Click values
 firstclickupgrpay = 10
+scndclickupgrpay = 1500
+thrdclickupgrpay = 15000
+frthclickupgrpay = 1005000
 
 
 
@@ -40,6 +43,9 @@ def load_data():
             "thrdupgrpay": 10000,
             "frthupgrpay": 1000000,
             "firstclickupgrpay": 10,
+            "scndclickupgrpay": 1500,
+            "thrdclickupgrpay": 15000,
+            "frthclickupgrpay": 1005000,
             "clickpower": 1,
         }
 
@@ -52,6 +58,9 @@ def save_data():
         "thrdupgrpay": thrdupgrpay,
         "frthupgrpay": frthupgrpay,
         "firstclickupgrpay": firstclickupgrpay,
+        "scndclickupgrpay": scndclickupgrpay,
+        "thrdclickupgrpay": thrdclickupgrpay,
+        "frthclickupgrpay": frthclickupgrpay,
         "clickpower": clickpower,
     }
     with open(saveloc, "wb") as file:
@@ -59,14 +68,21 @@ def save_data():
 
 game_data = load_data()
 
+# UI values
 Wonderhoys = game_data["Wonderhoys"]
 wps = game_data["wps"]
+clickpower = game_data["clickpower"]
+# WPS upgrade values
 firstupgrpay = game_data["firstupgrpay"]
 scndupgrpay = game_data["scndupgrpay"]
 thrdupgrpay = game_data["thrdupgrpay"]
 frthupgrpay = game_data["frthupgrpay"]
+# Click upgrade values
 firstclickupgrpay = game_data["firstclickupgrpay"]
-clickpower = game_data["clickpower"]
+scndclickupgrpay = game_data["scndclickupgrpay"]
+thrdclickupgrpay = game_data["thrdclickupgrpay"]
+frthclickupgrpay = game_data["frthclickupgrpay"]
+
 
 
 def on_closing():
@@ -125,7 +141,7 @@ def thrdupgr():
         Wonderhoys -= thrdupgrpay
         thrdupgrpay += thrdupgrpay + 10
         update_wonderhoy_label()
-        wps += 15
+        wps += 50
         wpslabel.config(text=f"WPS: {wps}")
         print(wps)
     else:
@@ -137,7 +153,7 @@ def frthupgrr():
         Wonderhoys -= frthupgrpay
         frthupgrpay += frthupgrpay + 20
         update_wonderhoy_label()
-        wps += 15
+        wps += 100
         wpslabel.config(text=f"WPS: {wps}")
         print(wps)
     else:
@@ -154,9 +170,44 @@ def cfrstupg():
         update_wonderhoy_label()
         cpslabel.config(text=f"Clicks: {clickpower}")
         clickpower += 2
+
+def cscndupg():
+    global Wonderhoys, clickpower, scndclickupgrpay
+    if Wonderhoys >= scndclickupgrpay:
+        Wonderhoys -= scndclickupgrpay
+        scndclickupgrpay += scndclickupgrpay + 10
+        cpsupgrade2.config(text=f"Lin Helper\n\n{scndclickupgrpay}\n\nAdds 5 Click Power")
+        update_wonderhoy_label()
+        cpslabel.config(text=f"Clicks: {clickpower}")
+        clickpower += 5
+
+def cthrdupg():
+    global Wonderhoys, clickpower, thrdclickupgrpay
+    if Wonderhoys >= thrdclickupgrpay:
+        Wonderhoys -= thrdclickupgrpay
+        thrdclickupgrpay += thrdclickupgrpay + 15
+        cpsupgrade3.config(text=f"Len Helper\n\n{thrdclickupgrpay}")
+        update_wonderhoy_label()
+        cpslabel.config(text=f"Clicks: {clickpower}")
+        clickpower += 50
+
+def cfrthupg():
+    global Wonderhoys, clickpower, frthclickupgrpay
+    if Wonderhoys >= frthclickupgrpay:
+        Wonderhoys -= frthclickupgrpay
+        frthclickupgrpay += frthclickupgrpay+ 15
+        cpsupgrade3.config(text=f"Meiko")
+        update_wonderhoy_label()
+        cpslabel.config(text=f"Clicks: {clickpower}")
+        clickpower += 100
+
+
+
         
+
 def update_wonderhoy_label():
-    global Wonderhoys, wps,clickpower,firstupgrpay, scndupgrpay
+    global Wonderhoys, wps,clickpower,firstupgrpay, scndupgrpay, thrdupgrpay, frthupgrpay
+    global firstclickupgrpay, scndclickupgrpay, thrdclickupgrpay, frthclickupgrpay
     # WPS upgrade numerize
     readable_wonderhoys = numerize.numerize(Wonderhoys)
     readable_wpsupg1 = numerize.numerize(firstupgrpay)
@@ -165,6 +216,9 @@ def update_wonderhoy_label():
     readable_wpsupg4 = numerize.numerize(frthupgrpay)
     # click upgrade numerize
     readable_clckupg1 = numerize.numerize(firstclickupgrpay)
+    readable_clckupg2 = numerize.numerize(scndclickupgrpay)
+    readable_clckupg3 = numerize.numerize(thrdclickupgrpay)
+    readable_clckupg4 = numerize.numerize(frthclickupgrpay)
     Wonderhoyammount.config(text=f"Wonderhoys:\n{readable_wonderhoys}")
     # WPS upgrade labels
     upgrade1.config(text=f"Emu Helper\n\n{readable_wpsupg1} WH\n\nAdds 2 WPS")
@@ -172,8 +226,10 @@ def update_wonderhoy_label():
     upgrade3.config(text=f"Nene Helper\n\n{readable_wpsupg3} WH\n\nAdds 50 WPS")
     upgrade4.config(text=f"Rui Helper\n\n{readable_wpsupg4} WH\n\nAdds 100 WPS")
     # click upgrade labels
-    cpsupgrade1.config(text=f"Miku Helper\n\n {readable_clckupg1} WH\n\nAdds 2 Click Power")
-
+    cpsupgrade1.config(text=f"Miku Helper\n\n{readable_clckupg1} WH\n\nAdds 2 Click Power")
+    cpsupgrade2.config(text=f"Lin Helper\n\n{readable_clckupg2} WH\n\nAdds 5 Click Power")
+    cpsupgrade3.config(text=f"Len Helper\n\n{readable_clckupg3} WH\n\nAdds 50 Click Power")
+    cpsupgrade4.config(text=f"Meiko Helper\n\n{readable_clckupg4} WH\n\nAdds 100 Click Power")
 
 
 def addwonderhoys():
@@ -223,11 +279,11 @@ cpsupgr = Label(window, text="Click\nUpgrades", font=("Arial", 25, 'bold'), fg='
 cpsupgr.place(x=35, y=100)
 cpsupgrade1 = Button(window, command=cfrstupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade1.place(x=27, y=200)
-cpsupgrade2 = Button(window, command=firstupgr, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+cpsupgrade2 = Button(window, command=cscndupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade2.place(x=27, y=320)
-cpsupgrade3 = Button(window, command=firstupgr, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+cpsupgrade3 = Button(window, command=cthrdupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade3.place(x=27, y=440)
-cpsupgrade4 = Button(window, command=firstupgr, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+cpsupgrade4 = Button(window, command=cfrthupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade4.place(x=27, y=560)
 # Misc GUI
 noninf = Label(window, text= "Version: NonInf!", background= "Pink", font= ("arial", 10, "bold"))
