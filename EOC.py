@@ -21,10 +21,7 @@ thrdclickupgrpay = 15000
 frthclickupgrpay = 1005000
 
 
-
-# TODO: Fix UI elements not being centered, finish upgrades, add saving for click power
-
-###### DECRYPTION/ENCRYPTION START ###### (IDK WHAT MOST OF THIS MEANS I COPIED THE DECRYPTION LMAO)
+###### DECRYPTION/ENCRYPTION START ######
 saveloc = "Data/game_data.dat"
 
 def load_data():
@@ -232,22 +229,11 @@ def update_wonderhoy_label():
     cpsupgrade4.config(text=f"Meiko Helper\n\n{readable_clckupg4} WH\n\nAdds 100 Click Power")
 
 
-def addwonderhoys():
-    global Wonderhoys
-    Wonderhoys = Wonderhoys * 50 
-
-def removewonderhoys():
-    global Wonderhoys
-    Wonderhoys = Wonderhoys - Wonderhoys
-
-
 # main clicker button GUI
 emuherself = PhotoImage(file="Images\kvxwxs89gqj81-ezgif.com-webp-to-png-converter.png")
 emuherselflabel = Label(image=emuherself)
 wonderhoy = Button(window, image=emuherself, command=clickevent, borderwidth=0, background="Pink", activebackground="Pink")
 wonderhoy.place(x=(950/2) - (296/2), y=(700/2) - (256/2)) # 950x700
-addwonds = Button(window, command= addwonderhoys, text="Add wonds")
-remwonds = Button(window, command= removewonderhoys, text="remove wonds")
 
 
 
@@ -303,8 +289,18 @@ nenechibi.place(x=624, y=415)
 ruichibiparent = PhotoImage(file="Images\download.png")
 ruichibi = Label(window, image = ruichibiparent, background="Pink")
 ruichibi.place(x=624, y=530)
-
-
+mikuchibiparent = PhotoImage(file="Images\WxS_Miku_chibi.png")
+mikuchibi = Label(window, image = mikuchibiparent, background="pink")
+mikuchibi.place(x=220,y=185)
+rinchibiparent = PhotoImage(file="Images\download (1).png")
+rinchibi = Label(window, image= rinchibiparent, background="Pink")
+rinchibi.place(x=219,y=300)
+lenchibiparent = PhotoImage(file="Images\download (2).png")
+lenchibi = Label(window, image= lenchibiparent, background="Pink")
+lenchibi.place(x=214,y=415)
+meikochibiparent = PhotoImage(file="Images\download (3).png")
+meikochibi= Label(window, image= meikochibiparent, background="Pink")
+meikochibi.place(x=214, y=530)
 
 def center_label(label, window_width, y_position):
     label.update_idletasks()  
@@ -325,9 +321,6 @@ center_label(wpslabel, window_width, 160)
 
 center_label(cpslabel, window_width, 182)
 
-center_label(addwonds, window_width, 200 )
-
-center_label(remwonds, window_width, 300)
 
 def wpsloop():
     global wps, Wonderhoys
