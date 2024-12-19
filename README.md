@@ -1,1 +1,1 @@
-Silly little emu otori clicker game. No .exe for now. 
+Silly little emu otori clicker game.
