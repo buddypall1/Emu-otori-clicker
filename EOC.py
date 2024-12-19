@@ -247,9 +247,8 @@ def cfrstupg():
         firstclickupgrpay += firstclickupgrpay + 10
         cpsupgrade1.config(text=f"Miku Helper \n {firstclickupgrpay}")
         update_wonderhoy_label()
-        cpslabel.config(text=f"ClickP: {clickpower}")
         clickpower += 2
-
+        cpslabel.config(text=f"ClickP: {clickpower}")
 def cscndupg():
     global Wonderhoys, clickpower, scndclickupgrpay
     if Wonderhoys >= scndclickupgrpay:
@@ -257,9 +256,8 @@ def cscndupg():
         scndclickupgrpay += scndclickupgrpay + 10
         cpsupgrade2.config(text=f"Lin Helper\n\n{scndclickupgrpay}\n\nAdds 5 Click Power")
         update_wonderhoy_label()
-        cpslabel.config(text=f"ClickP: {clickpower}")
         clickpower += 5
-
+        cpslabel.config(text=f"ClickP: {clickpower}")
 def cthrdupg():
     global Wonderhoys, clickpower, thrdclickupgrpay
     if Wonderhoys >= thrdclickupgrpay:
@@ -267,9 +265,8 @@ def cthrdupg():
         thrdclickupgrpay += thrdclickupgrpay + 15
         cpsupgrade3.config(text=f"Len Helper\n\n{thrdclickupgrpay}")
         update_wonderhoy_label()
-        cpslabel.config(text=f"ClickP: {clickpower}")
         clickpower += 50
-
+        cpslabel.config(text=f"ClickP: {clickpower}")
 def cfrthupg():
     global Wonderhoys, clickpower, frthclickupgrpay
     if Wonderhoys >= frthclickupgrpay:
@@ -277,8 +274,8 @@ def cfrthupg():
         frthclickupgrpay += frthclickupgrpay+ 15
         cpsupgrade3.config(text=f"Meiko")
         update_wonderhoy_label()
-        cpslabel.config(text=f"ClickP: {clickpower}")
         clickpower += 100
+        cpslabel.config(text=f"ClickP: {clickpower}")
 
 
 
