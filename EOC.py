@@ -103,7 +103,7 @@ def load_data():
         with open(saveloc, "rb") as file:
             data = pickle.load(file)
         return data
-    except (FileNotFoundError, EOFError, pickle.UnpicklingError):
+    except (FileNotFoundError, EOFError, pickle.UnpicklingError, ImportError, MemoryError):
         print("Error loading data or file not found. Initializing default values.")
         messagebox.showerror('Data Error', "Data file has been deleted or tampered with. Resetting progress..")
         return {
@@ -428,6 +428,7 @@ center_label(placeholder, window_width, 590)
 def wpsloop():
     center_label(everclicks, window_width, 550)
     center_label(everwonds, window_width, 570)
+    center_label(Wonderhoyammount, window_width, 50)
     global wps, Wonderhoys, alltimewonderhoys, paused
     alltimewonderhoys += wps
     if paused == False:
