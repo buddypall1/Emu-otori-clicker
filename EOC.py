@@ -302,8 +302,8 @@ def frthupgrr():
         frthupgrpay += frthupgrpay + 20
         update_wonderhoy_label()
         wps += frthupgrpowr
-        wpslabel.config(text=f"WPS: {numerizeinf(wps)}")
         frthupgrpowr += frthupgrpowr * 1.3
+        wpslabel.config(text=f"WPS: {numerizeinf(wps)}")
         print(wps)
     else:
         pass
@@ -335,7 +335,7 @@ def cthrdupg():
         Wonderhoys -= thrdclickupgrpay
         thrdclickupgrpay += thrdclickupgrpay + 15
         update_wonderhoy_label()
-        clickpower += 50
+        clickpower += frthcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         thrdcupgrpowr += thrdcupgrpowr * 0.9
 def cfrthupg():
@@ -344,7 +344,7 @@ def cfrthupg():
         Wonderhoys -= frthclickupgrpay
         frthclickupgrpay += frthclickupgrpay+ 20
         update_wonderhoy_label()
-        clickpower += 100
+        clickpower += frthcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         frthcupgrpowr += frthcupgrpowr * 1.3
 
@@ -366,7 +366,7 @@ def update_wonderhoy_label():
     readable_wpspowupg1= numerizeinf(firstupgrpowr)
     readable_wpspowupg2= numerizeinf(scndupgrpowr)
     readable_wpspowupg3= numerizeinf(thrdupgrpowr)
-    readable_wpspowupg4= numerizeinf(frthupgrpay)
+    readable_wpspowupg4= numerizeinf(frthupgrpowr)
     # click upgrade numerize
     readable_clckupg1 = numerizeinf(firstclickupgrpay)
     readable_clckupg2 = numerizeinf(scndclickupgrpay)
@@ -445,6 +445,11 @@ nextb = Button(window, text="Next", command=skiptrack, background="#FFA5CC", fon
 nextb.place(y=0)
 pauseb = Button(window, text="Pause", command= stopmusic, background="#FFA5CC", font=("arial", 10, "bold"), width= 10, activebackground="White")
 pauseb.place(y=620)
+def rahh():
+    global Wonderhoys
+    Wonderhoys =+ 999999999999999999999
+
+give = Button(window, command=rahh, text="DAVAJ",).place(x=50,y=50)
 
 
 
