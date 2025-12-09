@@ -445,11 +445,6 @@ nextb = Button(window, text="Next", command=skiptrack, background="#FFA5CC", fon
 nextb.place(y=0)
 pauseb = Button(window, text="Pause", command= stopmusic, background="#FFA5CC", font=("arial", 10, "bold"), width= 10, activebackground="White")
 pauseb.place(y=620)
-def rahh():
-    global Wonderhoys
-    Wonderhoys =+ 999999999999999999999
-
-give = Button(window, command=rahh, text="DAVAJ",).place(x=50,y=50)
 
 
 
