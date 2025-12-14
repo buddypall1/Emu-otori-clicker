@@ -58,38 +58,6 @@ for f in os.listdir(MUSIC_FOLDER):
 playlist = cycle(musicfiles)
 
 
-def infinitizer(magnitude):
-    magnitude -= 4  # done to prevent stuff already in numerize interfering
-    letters = string.ascii_lowercase
-    base = len(letters)
-    suffix = ""
-    magnitude += 26  
-
-    while magnitude >= 0: 
-
-        suffix = letters[magnitude % base] + suffix  
-        magnitude = magnitude // base - 1
-
-    return suffix
-
-
-def numerizeinf(number):
-
-    suffixes = ["", "K", "M", "B", "T"]
-    num = float(number)
-    magnitude = 0
-
-    while abs(num) >= 1000:
-
-        num /= 1000.0
-        magnitude += 1
-
-    if magnitude < len(suffixes): # checks if magnitude has reached enough for a custom suffix
-        suffix = suffixes[magnitude] 
-    else:
-        suffix = infinitizer(magnitude) # figuring out the letters for numbers past trillion
-
-    return f"{num:.2f}{suffix}" # final
 
 
 
@@ -135,6 +103,42 @@ def check_music_playing():
 
 
 ###### MUSIC HANDLING END ######
+
+
+
+def infinitizer(magnitude):
+    magnitude -= 4  # done to prevent stuff already in numerize interfering
+    letters = string.ascii_lowercase
+    base = len(letters)
+    suffix = ""
+    magnitude += 26  
+
+    while magnitude >= 0: 
+
+        suffix = letters[magnitude % base] + suffix  
+        magnitude = magnitude // base - 1
+
+    return suffix
+
+
+def numerizeinf(number):
+
+    suffixes = ["", "K", "M", "B", "T"]
+    num = float(number)
+    magnitude = 0
+
+    while abs(num) >= 1000:
+
+        num /= 1000.0
+        magnitude += 1
+
+    if magnitude < len(suffixes): # checks if magnitude has reached enough for a custom suffix
+        suffix = suffixes[magnitude] 
+    else:
+        suffix = infinitizer(magnitude) # figuring out the letters for numbers past trillion
+
+    return f"{num:.2f}{suffix}" # final
+
 
 ###### DECRYPTION/ENCRYPTION START ######
 saveloc = "Data/game_data.dat"
@@ -310,6 +314,8 @@ def frthupgrr():
 
 
 # Click Upgrades
+
+'''
 def cfrstupg():
     global Wonderhoys, clickpower, firstclickupgrpay, firstcupgrpowr
     if Wonderhoys >= firstclickupgrpay:
@@ -347,7 +353,7 @@ def cfrthupg():
         clickpower += frthcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         frthcupgrpowr += frthcupgrpowr * 1.3
-
+'''
 
 
         
@@ -381,6 +387,8 @@ def update_wonderhoy_label():
     readable_everwond = numerizeinf(alltimewonderhoys)
     readable_everclick = numerizeinf(clickamm)
     # WPS upgrade labels
+
+    '''
     upgrade1.config(text=f"Emu Helper\n\n{readable_wpsupg1} WH\n\nAdds {readable_wpspowupg1} WPS")
     upgrade2.config(text=f"Tsukasa Helper\n\n{readable_wpsupg2} WH\n\nAdds {readable_wpspowupg2} WPS")
     upgrade3.config(text=f"Nene Helper\n\n{readable_wpsupg3} WH\n\nAdds {readable_wpspowupg3} WPS")
@@ -390,6 +398,7 @@ def update_wonderhoy_label():
     cpsupgrade2.config(text=f"Lin Helper\n\n{readable_clckupg2} WH\n\nAdds {readable_cpowupg2} Click Power")
     cpsupgrade3.config(text=f"Len Helper\n\n{readable_clckupg3} WH\n\nAdds {readable_cpowupg3} Click Power")
     cpsupgrade4.config(text=f"Meiko Helper\n\n{readable_clckupg4} WH\n\nAdds {readable_cpowupg4} Click Power")
+    '''
     #stat labels
     everclicks.config(text=f"Total Clicks: {readable_everclick}")
     everwonds.config(text=f"Total Wonderhoys: {readable_everwond}")
@@ -410,6 +419,7 @@ wpslabel = Label(window, text=f"WPS: {numerizeinf(wps)}", font=("Arial", 10, "bo
 wpslabel.place(x=435, y=160)
 cpslabel = Label(window, text=f"ClickP: {numerizeinf(clickpower)}", font=("Arial", 10, "bold"), fg='#e236be', background="pink", activebackground="Pink")
 cpslabel.place(x=435, y=182)
+'''
 # WPS Upgrades GUI
 upgr = Label(window, text="WPS\nUpgrades", font=("Arial", 25, 'bold'), fg='#e236be', background="pink", activebackground="Pink", relief='solid', width= 8)
 upgr.place(x=745, y=100)
@@ -432,6 +442,7 @@ cpsupgrade3 = Button(window, command=cthrdupg, text=f"CPSupgr\ntext", bg="pink",
 cpsupgrade3.place(x=27, y=440)
 cpsupgrade4 = Button(window, command=cfrthupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade4.place(x=27, y=560)
+'''
 # Misc GUI
 inf = Label(window, text= "Version: Inf!", background= "Pink", font= ("arial", 10, "bold"))
 inf.place(y= 10)
