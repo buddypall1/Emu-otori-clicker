@@ -11,6 +11,7 @@ import string
 
 
 pygame.mixer.init()
+
 current_track = ""
 paused = False
 clickamm = 0
@@ -23,10 +24,12 @@ firstupgrpay = 10
 scndupgrpay = 1000
 thrdupgrpay = 10000
 frthupgrpay = 1000000
+fifthupgrpay = 100000000
 firstupgrpowr = 2
 scndupgrpowr = 5
 thrdupgrpowr = 50
 frthupgrpowr = 100
+fifthupgradepower = 150
 # Click values
 firstclickupgrpay = 10
 scndclickupgrpay = 1500
@@ -162,6 +165,7 @@ def load_data():
             "scndupgrpowr" : 5,
             "thrdupgrpowr" : 50,
             "frthupgrpowr" : 100,
+            "fifthupgradepower" : 150,
             "firstclickupgrpay": 10,
             "scndclickupgrpay": 1500,
             "thrdclickupgrpay": 15000,
@@ -187,6 +191,7 @@ def save_data():
         "scndupgrpowr" : scndupgrpowr,
         "thrdupgrpowr" : thrdupgrpowr,
         "frthupgrpowr" : frthupgrpowr,
+        "fifthupgradepower" : fifthupgradepower,
         "firstclickupgrpay": firstclickupgrpay,
         "scndclickupgrpay":  scndclickupgrpay,
         "thrdclickupgrpay":  thrdclickupgrpay,
@@ -217,6 +222,7 @@ firstupgrpowr= game_data["firstupgrpowr"]
 scndupgrpowr= game_data["scndupgrpowr"]
 thrdupgrpowr= game_data["thrdupgrpowr"]
 frthupgrpowr= game_data["frthupgrpowr"]
+fifthupgradepower = game_data["fifthupgradepower"]
 # Click upgrade values
 firstclickupgrpay = game_data["firstclickupgrpay"]
 scndclickupgrpay = game_data["scndclickupgrpay"]
@@ -311,11 +317,21 @@ def frthupgrr():
         print(wps)
     else:
         pass
+def fifthupgr():
+    global Wonderhoys, wps, fifthupgrpay, fifthupgradepower
+    if Wonderhoys >= fifthupgrpay:
+        Wonderhoys -= fifthupgrpay
+        fifthupgrpay += fifthupgrpay + 30
+        update_wonderhoy_label()
+        wps += fifthupgradepower
+        wpslabel.config(text=f"WPS: {numerizeinf(wps)}")
 
 
 # Click Upgrades
 
-'''
+
+
+
 def cfrstupg():
     global Wonderhoys, clickpower, firstclickupgrpay, firstcupgrpowr
     if Wonderhoys >= firstclickupgrpay:
@@ -335,6 +351,7 @@ def cscndupg():
         clickpower += scndcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         scndcupgrpowr += scndcupgrpowr * 0.5
+
 def cthrdupg():
     global Wonderhoys, clickpower, thrdclickupgrpay, thrdcupgrpowr
     if Wonderhoys >= thrdclickupgrpay:
@@ -344,6 +361,7 @@ def cthrdupg():
         clickpower += frthcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         thrdcupgrpowr += thrdcupgrpowr * 0.9
+
 def cfrthupg():
     global Wonderhoys, clickpower, frthclickupgrpay, frthcupgrpowr
     if Wonderhoys >= frthclickupgrpay:
@@ -353,7 +371,7 @@ def cfrthupg():
         clickpower += frthcupgrpowr
         cpslabel.config(text=f"ClickP: {numerizeinf(clickpower)}")
         frthcupgrpowr += frthcupgrpowr * 1.3
-'''
+
 
 
         
@@ -369,10 +387,12 @@ def update_wonderhoy_label():
     readable_wpsupg2 = numerizeinf(scndupgrpay)
     readable_wpsupg3 = numerizeinf(thrdupgrpay)
     readable_wpsupg4 = numerizeinf(frthupgrpay)
+    readable_wpsupg5 = numerizeinf(fifthupgrpay)
     readable_wpspowupg1= numerizeinf(firstupgrpowr)
     readable_wpspowupg2= numerizeinf(scndupgrpowr)
     readable_wpspowupg3= numerizeinf(thrdupgrpowr)
     readable_wpspowupg4= numerizeinf(frthupgrpowr)
+    readable_wpspowupg5= numerizeinf(fifthupgradepower)
     # click upgrade numerize
     readable_clckupg1 = numerizeinf(firstclickupgrpay)
     readable_clckupg2 = numerizeinf(scndclickupgrpay)
@@ -387,12 +407,17 @@ def update_wonderhoy_label():
     readable_everwond = numerizeinf(alltimewonderhoys)
     readable_everclick = numerizeinf(clickamm)
     # WPS upgrade labels
-
-    '''
     upgrade1.config(text=f"Emu Helper\n\n{readable_wpsupg1} WH\n\nAdds {readable_wpspowupg1} WPS")
+    
     upgrade2.config(text=f"Tsukasa Helper\n\n{readable_wpsupg2} WH\n\nAdds {readable_wpspowupg2} WPS")
+    
     upgrade3.config(text=f"Nene Helper\n\n{readable_wpsupg3} WH\n\nAdds {readable_wpspowupg3} WPS")
+
     upgrade4.config(text=f"Rui Helper\n\n{readable_wpsupg4} WH\n\nAdds {readable_wpspowupg4} WPS")
+
+    upgrade5.config(text=f"Honami Helper\n\n{readable_wpsupg5} WH\n\nAdds {readable_wpspowupg5} WPS")
+   
+    '''
     # click upgrade labels
     cpsupgrade1.config(text=f"Miku Helper\n\n{readable_clckupg1} WH\n\nAdds {readable_cpowupg1} Click Power")
     cpsupgrade2.config(text=f"Lin Helper\n\n{readable_clckupg2} WH\n\nAdds {readable_cpowupg2} Click Power")
@@ -410,6 +435,15 @@ emuherselflabel = Label(image=emuherself)
 wonderhoy = Button(window, image=emuherself, command=clickevent, borderwidth=0, background="Pink", activebackground="Pink")
 wonderhoy.place(x=(950/2) - (296/2), y=(700/2) - (256/2)) # 950x700
 
+shopblock = Frame(window, width=205, height= 630, bg='#FFC9D0', relief= "solid", borderwidth=2)
+shopblock.place(x=745, y=70)
+shoplabelblock = Frame(window, width=205, height= 71, bg='#FFC9D0', relief= "solid", borderwidth=2)
+shoplabelblock.place(x=745, y=0)
+shoplabel = Label(window, text="Shop", font=("Arial", 25, 'bold'), fg='#e236be', background="#FFC9D0", activebackground="Pink", width= 9)
+shoplabel.place(x=756, y=10)
+
+#statsblock = Frame(window, width=300, height= 450, bg='pink', relief= "raised", borderwidth=2)
+#statsblock.place(x=31, y=90)
 
 
 # Click counter 
@@ -419,21 +453,32 @@ wpslabel = Label(window, text=f"WPS: {numerizeinf(wps)}", font=("Arial", 10, "bo
 wpslabel.place(x=435, y=160)
 cpslabel = Label(window, text=f"ClickP: {numerizeinf(clickpower)}", font=("Arial", 10, "bold"), fg='#e236be', background="pink", activebackground="Pink")
 cpslabel.place(x=435, y=182)
-'''
-# WPS Upgrades GUI
-upgr = Label(window, text="WPS\nUpgrades", font=("Arial", 25, 'bold'), fg='#e236be', background="pink", activebackground="Pink", relief='solid', width= 8)
-upgr.place(x=745, y=100)
-upgrade1 = Button(window, command=firstupgr, text=f"Emu Helper = {firstupgrpay} WH\nadds {firstupgrpowr} WPS", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
-upgrade1.place(x=740, y=200)
-upgrade2 = Button(window, text=f"Tsukasa Helper\n{scndupgrpay} WH\nadds 5 WPS", command=scndupgr, bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
-upgrade2.place(x=740, y=320)
-upgrade3 = Button(window, text=f"Nene Helper\n{thrdupgrpay} WH\n\nadds 15 WPS", command=thrdupgr, bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
-upgrade3.place(x=740, y=440)
+
+
+
+upgrade1 = Button(window, command=firstupgr, text=f"Emu Helper = {firstupgrpay} WH\nadds {firstupgrpowr} WPS", bg="#FFC9D0", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+upgrade1.place(x=761, y=85)
+
+
+upgrade2 = Button(window, text=f"Tsukasa Helper\n{scndupgrpay} WH\nadds 5 WPS", command=scndupgr, bg="#FFC9D0", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+upgrade2.place(x=761, y=192)
+
+upgrade3 = Button(window, text=f"Nene Helper\n{thrdupgrpay} WH\n\nadds 15 WPS", command=thrdupgr, bg="#FFC9D0", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+upgrade3.place(x=761, y=299)
+
 upgrade4 = Button(window, text=f"Rui Helper\ntext", bg="pink", relief='groove', fg="#e236be", command=frthupgrr, font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
-upgrade4.place(x=740, y=560)
-# CPS Upgrades GUI
+upgrade4.place(x=761, y=408)
+
+upgrade5 = Button(window, text=f"Honami Helper\ntext", bg="pink", relief='groove', fg="#e236be", command=fifthupgr, font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
+upgrade5.place(x=761, y=517)
+
 cpsupgr = Label(window, text="Click\nUpgrades", font=("Arial", 25, 'bold'), fg='#e236be', background="pink", activebackground="Pink", relief='solid',width=8)
 cpsupgr.place(x=31, y=100)
+
+
+''''
+# CPS Upgrades GUI
+
 cpsupgrade1 = Button(window, command=cfrstupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
 cpsupgrade1.place(x=27, y=200)
 cpsupgrade2 = Button(window, command=cscndupg, text=f"CPSupgr\ntext", bg="pink", relief='groove', fg="#e236be", font=("Arial", 10, "bold"), borderwidth=5, width=20, height=5)
@@ -448,15 +493,13 @@ inf = Label(window, text= "Version: Inf!", background= "Pink", font= ("arial", 1
 inf.place(y= 10)
 version = Label(window, text= "(Game has fixed formatting!\nshould be infinite now.)", background="pink", font= ("arial", 10, "bold"))
 version.place(x=35, y=10)
-nextup = Label(window, text= "Next up:\nHeavy UI improvements\nNew features?!\nMore upgrades?!", background="pink", font= ("Arial", 10, "bold"))
-nextup.place(x=755, y=10)
-currentsong = Label(window, text=f"Currently Playing: {current_track}", font=("arial", 19), background="#FFA5CC", relief='solid')
+currentsong = Label(window, text=f"Currently Playing: {current_track}", font=("arial", 19), background="#FFD4D9", relief='solid')
 currentsong.place(y=666)
-nextb = Button(window, text="Next", command=skiptrack, background="#FFA5CC", font=("arial", 10, "bold"), width=10, activebackground="White")
+nextb = Button(window, text="Next", command=skiptrack, background="#FFD4D9", font=("arial", 10, "bold"), width=10, activebackground="White")
 nextb.place(y=0)
-pauseb = Button(window, text="Pause", command= stopmusic, background="#FFA5CC", font=("arial", 10, "bold"), width= 10, activebackground="White")
+pauseb = Button(window, text="Pause", command= stopmusic, background="#FFD4D9", font=("arial", 10, "bold"), width= 10, activebackground="White")
 pauseb.place(y=620)
-
+#pagetwo = Button(window, text="2", command= )
 
 
 # Stats GUI
