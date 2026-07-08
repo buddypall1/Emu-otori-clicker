@@ -1,3 +1,3 @@
 Silly little emu otori clicker game.
 
-CURRENTLY UNDER DEVELOPMENT HIATUS DUE TO CODE INNEFICIENCY AND NO TIME TO FIX IT
+(pyside6 rework)
