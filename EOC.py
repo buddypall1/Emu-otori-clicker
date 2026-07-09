@@ -50,7 +50,7 @@ def load_data():
         QMessageBox.warning(window, "Warning!", "Save data corrupt or not found! (Normal on first time launch) Resetting..")
         return {
             "wonderhoys": 0,
-            "clickspersecond": 0,
+            "clickspersecond": 1,
             "Clickstrength": 1
         }
     
@@ -61,9 +61,18 @@ game_data = load_data()
 
 #### GLOBAL VARIABLES ####
 
-wonderhoys = game_data['wonderhoys'] #(main currency)
+wonderhoys = game_data['wonderhoys']
+'''
+main currency variable (USED TO ADD TO/MODIFY WONDERHOYS)
+'''
 clickspersecond = game_data['clickspersecond']
+'''
+how many clicks the game does per tick
+'''
 clickstrength = game_data['Clickstrength']
+'''
+how much wonderhoys the user gets from clicking emu
+'''
 
 #### GLOBAL VARIABLES ####
 
@@ -82,9 +91,9 @@ wondahoy = pygame.mixer.Sound("SFX/WONDERHOY SOUND EFFECT (no background music).
 wondahoy.set_volume(0.05)
 
 def clickevent():
-    global wonderhoys, money
+    global wonderhoys, money, clickstrength
 
-    wonderhoys += 1
+    wonderhoys += clickstrength
     money.setText(f"Wonderhoys: {wonderhoys}")
     wondahoy.play(loops=0)
 
@@ -122,6 +131,9 @@ centerer(emubutton, 0, -100)
 emubutton.clicked.connect(clickevent)
 
 money = QLabel(f"Wonderhoys: {wonderhoys}")
+'''
+ONLY THE VISUAL LABEL OF THE WONDERHOYS DISPLAYED FOR THE USER (goto wonderhoys variable to edit that)
+'''
 money.setParent(mainwidget)
 money.resize(250,140)
 money.setObjectName("money")
@@ -146,13 +158,29 @@ rowstyle3 ="""
 """
 
 wonderhoyspersecond = QLabel(f"WPS: {clickspersecond}")
+'''
+label for WPS on the UI (NOT THE VARIABLE FOR WPS! goto clickspersecond to edit that variable!)
+'''
 wonderhoyspersecond.setParent(mainwidget)
 wonderhoyspersecond.resize(100,100)
 wonderhoyspersecond.setObjectName("details")
 wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
 
+def tick():
+    global clickspersecond, wonderhoys
+
+    wonderhoys += clickspersecond
+    money.setText(f"Wonderhoys: {wonderhoys}")
+
+timer = QTimer()
+timer.timeout.connect(tick)
+timer.start(1000)
+
 clickstrengthlabel = QLabel(f"ClickPow:{clickstrength}")
+'''
+label for ClickPow on the UI (goto clickstrength to edit the variable.)
+'''
 clickstrengthlabel.setParent(mainwidget)
 clickstrengthlabel.resize(100,100)
 clickstrengthlabel.setObjectName("details")
@@ -252,13 +280,23 @@ app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3)
 shopcontainerstack = QStackedWidget()
 shopcontainerstack.setObjectName("RowScroller")
 
-# 1st page
+# 1st page (click power updates)
 firstpage = QWidget()
 firstpagelayout = QVBoxLayout(firstpage)
 upgrade_button = QPushButton("TestUpg1\nprice: NaN")
 upgrade_button.setObjectName("Row")
 firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
+
+def firstclickupg():
+    global clickstrength
+
+    clickstrength += 1
+    clickstrengthlabel.setText(f"ClickPow: {clickstrength}")
+    print(clickstrength)
+
+
+upgrade_button.clicked.connect(firstclickupg)
 
 # 2nd page
 secondpage = QWidget()
