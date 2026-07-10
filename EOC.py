@@ -9,12 +9,6 @@ pygame.mixer.init()
 
 saveloc = "Data/game_data.dat"
 
-
-
-
-
-
-
 app = QApplication(sys.argv)
 
 window = QMainWindow()
@@ -26,6 +20,9 @@ window.setFixedSize(1910,1000)
 #### SAVE HANDLING ####
 
 def save_data():
+    '''
+    Data saving function. Call to save the game (Used on exit and autosaves if enabled [NOT IMPLEMENTED YET])
+    '''
     data = {
         "wonderhoys" : wonderhoys,
         "clickspersecond": clickspersecond,
@@ -55,7 +52,9 @@ def load_data():
         }
     
 game_data = load_data()
-
+'''
+This is the variable that the global variables obtain their values from the save file
+'''
 
 #### SAVE HANDLING ####
 
@@ -91,12 +90,14 @@ wondahoy = pygame.mixer.Sound("SFX/WONDERHOY SOUND EFFECT (no background music).
 wondahoy.set_volume(0.05)
 
 def clickevent():
+    '''
+    Ran on user click on emu
+    '''
     global wonderhoys, money, clickstrength
 
     wonderhoys += clickstrength
     money.setText(f"Wonderhoys: {wonderhoys}")
     wondahoy.play(loops=0)
-
 
 
 
@@ -122,6 +123,12 @@ emubutton.setStyleSheet("""
 emubutton.setParent(mainwidget)
 
 def centerer(input, xoffset, yoffset):
+    '''
+    function used to help center widgets
+    INPUT - The widget to center
+    XOFFSET - offset on x axis after centering
+    YOFFSET - offset on y axis after centering
+    '''
     x = (1910 - input.width()) // 2
     y = (1000 - input.height()) // 2
     input.move(x + xoffset,y + yoffset)
@@ -168,6 +175,9 @@ wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
 
 def tick():
+    '''
+    main gameloop function, runs every second.
+    '''
     global clickspersecond, wonderhoys
 
     wonderhoys += clickspersecond
@@ -186,20 +196,17 @@ clickstrengthlabel.resize(100,100)
 clickstrengthlabel.setObjectName("details")
 clickstrengthlabel.setAlignment(Qt.AlignCenter)
 
+###################
+##### SHOP UI #####
+###################
+
 shopmainwidget = QWidget()
 shopmainlayout = QVBoxLayout()
 shopmainwidget.setLayout(shopmainlayout)
 shopmainwidget.resize(400,1000)
 shopmainwidget.setParent(mainwidget)
-shopmainwidget.setObjectName("Test")
-shopmainwidget.setStyleSheet("""
-    #Test {
-    background-color: #fce0ed;
-    color: #ffb2d7;
-    border: 4px solid #ffb2d7;   
-    border-radius: 4px;
-    }
-""")
+shopmainwidget.setObjectName("Row")
+
 
 shoptitle = QLabel("Shop!")
 shoptitle.setAlignment(Qt.AlignCenter)
@@ -235,10 +242,10 @@ rowstyle ="""
     }
 """
 upgraderow = QHBoxLayout()
-testrow1=QPushButton("Test1")
+testrow1=QPushButton("Click Upgrades!")
 testrow1.setObjectName("Row")
 
-testrow2=QPushButton("Test2")
+testrow2=QPushButton("WPS Upgrades!")
 testrow2.setObjectName("Row")
 
 shopscroller = QScrollArea()
@@ -276,7 +283,7 @@ shopscroller.setStyleSheet("""
         background: none;
     }
 """)
-app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3)
+
 shopcontainerstack = QStackedWidget()
 shopcontainerstack.setObjectName("RowScroller")
 
@@ -284,6 +291,19 @@ shopcontainerstack.setObjectName("RowScroller")
 firstpage = QWidget()
 firstpagelayout = QVBoxLayout(firstpage)
 upgrade_button = QPushButton("TestUpg1\nprice: NaN")
+upgrade_button.setToolTip("This is a test upgrade! \nAdds 1 ClickPow for free")
+tooltipstyle="""
+    QToolTip {
+        background-color: #ffb8ce;
+        color: #de6a8f;
+        border: 4px solid #de6a8f;
+        border-radius: 4px;
+        padding: 6px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+"""
+app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3+tooltipstyle)
 upgrade_button.setObjectName("Row")
 firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
@@ -321,6 +341,8 @@ shopmainlayout.addWidget(shopscroller)
 shopmainlayout.setContentsMargins(0, 0, 0, 0)
 shopmainlayout.setSpacing(2)
 
+
+
 WIPbutton = QPushButton("WIP")
 WIPbutton.setObjectName("WIPbutton")
 WIPbutton.setStyleSheet("""
@@ -343,10 +365,97 @@ WIPbutton.setStyleSheet("""
 """)
 shopmainlayout.addWidget(WIPbutton)
 
+###################
+##### SHOP UI #####
+###################
+
+###################
+##### LEFT UI #####
+###################
+
+leftuiwidget = QWidget()
+leftuimainlayout = QVBoxLayout()
+leftuiwidget.setLayout(leftuimainlayout)
+leftuiwidget.resize(400,1000)
+leftuiwidget.setParent(mainwidget)
+leftuiwidget.setObjectName("Row")
+
+leftuilabel = QLabel("Info!")
+leftuilabel.setAlignment(Qt.AlignCenter)
+leftuilabel.resize(200,10)
+leftuilabel.setObjectName("Shopname")
+leftuilabel.setStyleSheet("""
+    #Shopname{
+    background-color: #ffb8ce;
+    color: #de6a8f;
+    border: 5px solid #de6a8f;   
+    border-radius: 4px;
+    font-size: 65px;
+    font-weight: bold;
+    }
+""")
+leftuimainlayout.addWidget(leftuilabel)
+leftuimainlayout.setContentsMargins(0, 0, 0, 0)
+leftuimainlayout.setSpacing(2)
+upgraderowleft = QHBoxLayout()
+testrowL1 = QPushButton("Settings")
+testrowL1.setObjectName("Row")
+upgraderowleft.addWidget(testrowL1)         
+
+testrowL2 = QPushButton("Stats")
+testrowL2.setObjectName("Row")
+upgraderowleft.addWidget(testrowL2)
+
+testrowL3 = QPushButton("Achievements")
+testrowL3.setObjectName("Row")
+upgraderowleft.addWidget(testrowL3)
+
+leftuicroller = QScrollArea()
+leftuicroller.setObjectName("Leftscroller")
+leftuicroller.setWidgetResizable(True)
+leftuicroller.setStyleSheet("""
+    QScrollBar:vertical {
+        background: #fce0ed;
+        width: 5px;
+        margin: 0px;
+        border-radius: 5px;
+    }
+    QScrollBar::handle:vertical {
+        background: #ff7aa4;
+        border-radius: 5px;
+        min-height: 20px;
+    }
+    QScrollBar::handle:vertical:hover {
+        background: #e66e94;
+    }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+        height: 0px;
+    }
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        background: none;
+    }
+    #Leftscroller {
+    background-color: #b38190;
+    color: #ff7aa4;
+    border: 3px solid #ff7aa4;   
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: bold;
+    }
+""")
+leftuimainlayout.addLayout(upgraderowleft)
+leftuimainlayout.addWidget(leftuicroller)    
+
+
+###################
+##### LEFT UI #####
+###################
+
 centerer(shopmainwidget, 755 , 0)
 centerer(money, -5, -350)
 centerer(wonderhoyspersecond, -5, -330)
 centerer(clickstrengthlabel, -5,-310)
+centerer(leftuiwidget,-755,0)
 
 
 load_data()
