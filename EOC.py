@@ -73,6 +73,13 @@ clickstrength = game_data['Clickstrength']
 how much wonderhoys the user gets from clicking emu
 '''
 
+tutorialfinished = 0
+'''
+checks if the tutorial was fully seen.
+If 1 do not display tutorial on launch.
+If 0 DO display tutorial on launch.
+'''
+
 #### GLOBAL VARIABLES ####
 
 pixmap = QPixmap("Images\other\emu.png").scaled(350,350, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
@@ -178,8 +185,8 @@ def tick():
     '''
     main gameloop function, runs every second.
     '''
-    global clickspersecond, wonderhoys
-
+    global clickspersecond, wonderhoys, tutorialfinished
+    print(tutorialfinished)
     wonderhoys += clickspersecond
     money.setText(f"Wonderhoys: {wonderhoys}")
 
@@ -488,6 +495,51 @@ leftuimainlayout.addWidget(leftuiscroller)
 ##### LEFT UI #####
 ###################
 
+###################
+####  TUTORIAL  ###
+###################
+
+def tutorialcheck():
+    global tutorialfinished
+    if tutorialfinished == 1:
+        pass
+    else:
+        tutorialdisplay()
+
+def tutorialdisplay():
+    global tutorialfinished
+    tutorialfinished = 1
+    print("Tutorial displayed!")
+    ### Background dimmer ###
+    dimmer = QWidget(mainwidget)
+    dimmer.setObjectName("DimmerStyle")
+    dimmer.setStyleSheet("""
+    #DimmerStyle{
+    background-color: rgba(0,0,0,150);
+    }
+    """)
+    dimmer.resize(1910, 1000)
+    dimmer.move(0,0)
+    ### Background dimmer ###
+
+    tutorial = QWidget(dimmer)
+    tutorial.setObjectName("Row")
+    tutorial.resize(600,600)
+    centerer(tutorial, 0,0)
+    tutoriallayout = QVBoxLayout(tutorial)
+    tutoriallayout.setObjectName("Row")
+    testmsg = QLabel("This is the tutorial test")
+    tutoriallayout.addWidget(testmsg)
+
+    tutorialexit = QPushButton("I understand!")
+    tutorialexit.setObjectName("Row")
+    tutoriallayout.addWidget(tutorialexit)
+    tutorialexit.clicked.connect(lambda: dimmer.hide())
+
+
+###################
+####  TUTORIAL  ###
+###################
 centerer(shopmainwidget, 755 , 0)
 centerer(money, -5, -350)
 centerer(wonderhoyspersecond, -5, -330)
@@ -496,6 +548,7 @@ centerer(leftuiwidget,-755,0)
 
 
 load_data()
+tutorialcheck()
 window.show()
 
 
