@@ -331,7 +331,15 @@ rowstyle5 ="""
     font-weight: bold;
 }
 """
-app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5)
+rowstyle6 ="""
+    #Rowbuttonborderless {
+    background-color: #ffb8ce;
+    color: #de6a8f;
+    font-size: 17px;
+    font-weight: bold;
+}
+"""
+app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5 + rowstyle6)
 upgrade_button.setObjectName("Row")
 firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
@@ -429,9 +437,6 @@ leftuimainlayout.addWidget(leftuilabel)
 leftuimainlayout.setContentsMargins(0, 0, 0, 0)
 leftuimainlayout.setSpacing(2)
 upgraderowleft = QHBoxLayout()
-testrowL1 = QPushButton("Settings")
-testrowL1.setObjectName("Row")
-upgraderowleft.addWidget(testrowL1)
 
 testrowL2 = QPushButton("Stats")
 testrowL2.setObjectName("Row")
@@ -440,6 +445,11 @@ upgraderowleft.addWidget(testrowL2)
 testrowL3 = QPushButton("Achievements")
 testrowL3.setObjectName("Row")
 upgraderowleft.addWidget(testrowL3)
+
+
+testrowL1 = QPushButton("Settings")
+testrowL1.setObjectName("Row")
+upgraderowleft.addWidget(testrowL1)
 
 #1st page (Settings)
 firstpageleft = QWidget()
@@ -509,7 +519,40 @@ leftuiscroller.setStyleSheet("""
     }
 """)
 leftuimainlayout.addLayout(upgraderowleft)
-leftuimainlayout.addWidget(leftuiscroller)    
+leftuimainlayout.addWidget(leftuiscroller)
+
+musicplayertop = QLabel("Music Player")
+musicplayertop.setAlignment(Qt.AlignCenter)
+musicplayertop.setObjectName("musicplayertop")
+musicplayertop.setStyleSheet("""
+    #musicplayertop{
+    background-color: #ffb8ce;
+    color: #de6a8f;
+    border: 3px solid #de6a8f;   
+    border-radius: 4px;
+    font-size: 25px;
+    font-weight: bold;
+    }
+""")
+leftuimainlayout.addWidget(musicplayertop)
+currenttrack = QLabel("Current track placeholder")
+currenttrack.setAlignment(Qt.AlignCenter)
+currenttrack.setObjectName("Rowbuttonborderless")
+leftuimainlayout.addWidget(currenttrack)
+
+musicplayer = QHBoxLayout()
+prevbutton = QPushButton("<<")
+prevbutton.setObjectName("Row")
+musicplayer.addWidget(prevbutton)
+pausebutton = QPushButton("Pause")
+pausebutton.setObjectName("Row")
+musicplayer.addWidget(pausebutton)
+nextbutton= QPushButton(">>")
+nextbutton.setObjectName("Row")
+musicplayer.addWidget(nextbutton)
+
+leftuimainlayout.addLayout(musicplayer)
+
 
 
 ###################
