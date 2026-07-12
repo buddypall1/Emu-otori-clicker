@@ -373,6 +373,9 @@ shopmainlayout.addWidget(WIPbutton)
 ##### LEFT UI #####
 ###################
 
+leftuicontainerstack = QStackedWidget()
+leftuicontainerstack.setObjectName("RowScroller")
+
 leftuiwidget = QWidget()
 leftuimainlayout = QVBoxLayout()
 leftuiwidget.setLayout(leftuimainlayout)
@@ -400,7 +403,7 @@ leftuimainlayout.setSpacing(2)
 upgraderowleft = QHBoxLayout()
 testrowL1 = QPushButton("Settings")
 testrowL1.setObjectName("Row")
-upgraderowleft.addWidget(testrowL1)         
+upgraderowleft.addWidget(testrowL1)
 
 testrowL2 = QPushButton("Stats")
 testrowL2.setObjectName("Row")
@@ -410,10 +413,44 @@ testrowL3 = QPushButton("Achievements")
 testrowL3.setObjectName("Row")
 upgraderowleft.addWidget(testrowL3)
 
-leftuicroller = QScrollArea()
-leftuicroller.setObjectName("Leftscroller")
-leftuicroller.setWidgetResizable(True)
-leftuicroller.setStyleSheet("""
+#1st page (Settings)
+firstpageleft = QWidget()
+firstpageleftlayout = QVBoxLayout(firstpageleft)
+lefttest = QLabel("This is a test")
+lefttest.setObjectName("Row")
+firstpageleftlayout.addWidget(lefttest)
+firstpageleftlayout.addStretch()
+
+#2nd page (Stats)
+secondpageleft = QWidget()
+secondpageleftlayout = QVBoxLayout(secondpageleft)
+lefttest2 = QLabel("This is ALSO a test")
+lefttest2.setObjectName("Row")
+secondpageleftlayout.addWidget(lefttest2)
+secondpageleftlayout.addStretch()
+
+#3rd page (Achievos)
+
+thirdpageleft = QWidget()
+thirdpageleftlayout= QVBoxLayout(thirdpageleft)
+lefttest3 = QLabel("yet ANOTHER test")
+lefttest3.setObjectName("Row")
+thirdpageleftlayout.addWidget(lefttest3)
+thirdpageleftlayout.addStretch()
+
+leftuicontainerstack.addWidget(firstpageleft)
+leftuicontainerstack.addWidget(secondpageleft)
+leftuicontainerstack.addWidget(thirdpageleft)
+
+testrowL1.clicked.connect(lambda: leftuicontainerstack.setCurrentIndex(1))
+testrowL2.clicked.connect(lambda: leftuicontainerstack.setCurrentIndex(0))
+testrowL3.clicked.connect(lambda: leftuicontainerstack.setCurrentIndex(2))
+
+leftuiscroller = QScrollArea()
+leftuiscroller.setObjectName("Leftscroller")
+leftuiscroller.setWidget(leftuicontainerstack)
+leftuiscroller.setWidgetResizable(True)
+leftuiscroller.setStyleSheet("""
     QScrollBar:vertical {
         background: #fce0ed;
         width: 5px;
@@ -444,7 +481,7 @@ leftuicroller.setStyleSheet("""
     }
 """)
 leftuimainlayout.addLayout(upgraderowleft)
-leftuimainlayout.addWidget(leftuicroller)    
+leftuimainlayout.addWidget(leftuiscroller)    
 
 
 ###################
