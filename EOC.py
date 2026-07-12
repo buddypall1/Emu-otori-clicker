@@ -26,7 +26,8 @@ def save_data():
     data = {
         "wonderhoys" : wonderhoys,
         "clickspersecond": clickspersecond,
-        "Clickstrength": clickstrength
+        "Clickstrength": clickstrength,
+        "Tutorialfinished": tutorialfinished
     }
     with open(saveloc, "wb") as file:
         pickle.dump(data, file)
@@ -48,7 +49,8 @@ def load_data():
         return {
             "wonderhoys": 0,
             "clickspersecond": 1,
-            "Clickstrength": 1
+            "Clickstrength": 1,
+            "Tutorialfinished": 0
         }
     
 game_data = load_data()
@@ -73,7 +75,7 @@ clickstrength = game_data['Clickstrength']
 how much wonderhoys the user gets from clicking emu
 '''
 
-tutorialfinished = 0
+tutorialfinished = game_data['Tutorialfinished']
 '''
 checks if the tutorial was fully seen.
 If 1 do not display tutorial on launch.
