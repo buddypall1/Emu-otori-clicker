@@ -172,7 +172,14 @@ rowstyle3 ="""
     font-weight:bold;
     }
 """
+rowstyle4 = """
+    #tutorialtop{
+    color: #de6a8f;
+    font-size:30px;
+    font-weight:bold;
+    }
 
+"""
 wonderhoyspersecond = QLabel(f"WPS: {clickspersecond}")
 '''
 label for WPS on the UI (NOT THE VARIABLE FOR WPS! goto clickspersecond to edit that variable!)
@@ -250,6 +257,7 @@ rowstyle ="""
     color: white;
     }
 """
+
 upgraderow = QHBoxLayout()
 testrow1=QPushButton("Click Upgrades!")
 testrow1.setObjectName("Row")
@@ -312,7 +320,7 @@ tooltipstyle="""
         font-weight: bold;
     }
 """
-app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3+tooltipstyle)
+app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3+tooltipstyle+rowstyle4)
 upgrade_button.setObjectName("Row")
 firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
@@ -510,7 +518,7 @@ def tutorialcheck():
 
 def tutorialdisplay():
     global tutorialfinished
-    tutorialfinished = 1
+    tutorialfinished = 0
     print("Tutorial displayed!")
     ### Background dimmer ###
     dimmer = QWidget(mainwidget)
@@ -530,9 +538,13 @@ def tutorialdisplay():
     centerer(tutorial, 0,0)
     tutoriallayout = QVBoxLayout(tutorial)
     tutoriallayout.setObjectName("Row")
+    tutorialgreeting = QLabel("Tutorial!")
+    tutorialgreeting.setObjectName("tutorialtop")
+    tutorialgreeting.setAlignment(Qt.AlignCenter)
+    tutoriallayout.addWidget(tutorialgreeting)
     testmsg = QLabel("This is the tutorial test")
     tutoriallayout.addWidget(testmsg)
-
+    tutoriallayout.addStretch()
     tutorialexit = QPushButton("I understand!")
     tutorialexit.setObjectName("Row")
     tutoriallayout.addWidget(tutorialexit)
