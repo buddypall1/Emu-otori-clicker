@@ -320,7 +320,18 @@ tooltipstyle="""
         font-weight: bold;
     }
 """
-app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3+tooltipstyle+rowstyle4)
+
+rowstyle5 ="""
+    #Rowbuttonless {
+    background-color: #ffb8ce;
+    color: #de6a8f;
+    border: 3px solid #de6a8f;   
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: bold;
+}
+"""
+app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5)
 upgrade_button.setObjectName("Row")
 firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
@@ -518,7 +529,7 @@ def tutorialcheck():
 
 def tutorialdisplay():
     global tutorialfinished
-    tutorialfinished = 0
+    tutorialfinished = 1
     print("Tutorial displayed!")
     ### Background dimmer ###
     dimmer = QWidget(mainwidget)
@@ -533,17 +544,37 @@ def tutorialdisplay():
     ### Background dimmer ###
 
     tutorial = QWidget(dimmer)
-    tutorial.setObjectName("Row")
-    tutorial.resize(600,600)
+    tutorial.setObjectName("Rowbuttonless")
+    tutorial.resize(700,455)
     centerer(tutorial, 0,0)
     tutoriallayout = QVBoxLayout(tutorial)
     tutoriallayout.setObjectName("Row")
-    tutorialgreeting = QLabel("Tutorial!")
+
+    tutorialgreeting = QLabel("! ATTENTION !")
     tutorialgreeting.setObjectName("tutorialtop")
     tutorialgreeting.setAlignment(Qt.AlignCenter)
+
     tutoriallayout.addWidget(tutorialgreeting)
-    testmsg = QLabel("This is the tutorial test")
-    tutoriallayout.addWidget(testmsg)
+
+    demomsg = QLabel("Hello! Welcome to Emu Otori Clicker!\nThis message is here to tell you the game is currently only a DEMO!!!\nUI and gameplay may change as development continues!\nThis version has limited functionality!! Keep up with updates on the Itch.io page!\nI post devlogs as i work on the game!\nAnyways! I hope you enjoy my silly little clicker game :D It is tons of fun to make!\nThis will be the Tutorial screen later so uhh.. terminology!\n\nWPS: Wonderhoys Per Second! (How many Wonderhoys you make per second automatically)\nUpgrade this in the WPS upgrades section in the shop!\n(This is all the tutorial has for now. uhh.. upgrade your stuff and click lots!)\nThere are things like Ascension planned that will give you a reason to actually play!!!")
+    demomsg.setObjectName("demotxt")
+    demomsg.setStyleSheet("""
+    #demotxt{
+    color: #de6a8f;
+    font-size:15px;
+    font-weight:bold;
+    }
+""")
+    demomsg.setAlignment(Qt.AlignCenter)
+    tutoriallayout.addWidget(demomsg)
+
+    demoemu = QLabel()
+    demoemupixmap = QPixmap("Images\other\emututorial.png").scaled(100,100, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+    demoemu.setPixmap(demoemupixmap)
+    demoemu.setAlignment(Qt.AlignCenter)
+    tutoriallayout.addWidget(demoemu)
+
+
     tutoriallayout.addStretch()
     tutorialexit = QPushButton("I understand!")
     tutorialexit.setObjectName("Row")
