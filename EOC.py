@@ -88,7 +88,7 @@ If 1 do not display tutorial on launch.
 If 0 DO display tutorial on launch.
 '''
 
-Paused = True
+Paused = False
 
 current_track = ""
 
@@ -271,7 +271,7 @@ click_upgrades = [
         "owned": saved_upgrades.get("Test2", 0),
         "button": None,
         "type": "click",
-        "flavortext": "Flavortext test for upgrade2 !"
+        "flavortext": f"Flavortext test for upgrade2"
     },
 ]
 
@@ -295,7 +295,9 @@ def update_button_text(upgrade):
     cost = current_cost(upgrade)
     upgrade["button"].setText(
         f"{upgrade['name']} (Owned: {upgrade['owned']})\n"f"Price: {format_number(cost)}\n"f"Adds: {format_number(upgrade['power_per_purchase'])} ClickPow!")
-    button.setToolTip(f"{upgrade['flavortext']}")
+    upgrade["button"].setToolTip(
+        f"{upgrade['flavortext']}\n adding a combined {upgrade['power_per_purchase']*upgrade['owned']} power!"
+    )
 
 def buy_upgrade(upgrade):
     global wonderhoys, clickstrength, clickspersecond
