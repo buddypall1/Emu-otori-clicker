@@ -1,9 +1,11 @@
 import sys
+import os
 from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QScrollArea, QWidget, QVBoxLayout, QStackedWidget, QMessageBox, QFrame, QHBoxLayout
 from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QFont, QIcon, QPixmap
 import pygame
 import pickle
+from itertools import cycle
 
 pygame.mixer.init()
 
@@ -81,6 +83,10 @@ checks if the tutorial was fully seen.
 If 1 do not display tutorial on launch.
 If 0 DO display tutorial on launch.
 '''
+
+Paused = False
+
+current_track = ""
 
 #### GLOBAL VARIABLES ####
 
@@ -560,6 +566,70 @@ leftuimainlayout.addLayout(musicplayer)
 ###################
 
 ###################
+#   MUSIC PLAYER  #
+###################
+
+MUSIC_FOLDER = "SFX\Music"
+pygame.mixer.music.set_volume(0.2)
+
+musicfiles= []
+for f in os.listdir(MUSIC_FOLDER):
+    if f.endswith(('mp3')):
+        musicfiles.append(f)
+    print(musicfiles)
+
+current_index = 0
+        
+playlist = cycle(musicfiles)
+
+
+def play_current_track():
+    global current_track
+    current_track = musicfiles[current_index]
+    track_name, extension = os.path.splitext(current_track)
+    pygame.mixer.music.load(os.path.join(MUSIC_FOLDER, current_track))
+    pygame.mixer.music.play(loops=0)
+    currenttrack.setText(f"Playing: {track_name}")
+
+def nextrack():
+    global current_index
+    current_index = (current_index + 1) % len(musicfiles)
+    play_current_track()
+
+
+def prevtrack():
+    global current_index
+    current_index = (current_index - 1) % len(musicfiles)
+    play_current_track()
+
+def stopmusic():
+    global Paused, current_track
+    track_name, extension = os.path.splitext(current_track)
+    if Paused == False:
+        Paused = True
+        pygame.mixer.music.pause()
+        print(f"Pause is set to {Paused}")
+        currenttrack.setText(f"Paused!")
+    elif Paused == True:
+        Paused = False
+        pygame.mixer.music.unpause()
+        currenttrack.setText(f"Playing: {track_name}")
+
+
+def check_music_playing():
+    if not pygame.mixer.music.get_busy():
+        nextrack() 
+
+
+prevbutton.clicked.connect(prevtrack)
+nextbutton.clicked.connect(nextrack)
+pausebutton.clicked.connect(stopmusic)
+
+###################
+#   MUSIC PLAYER  #
+###################
+
+###################
 ####  TUTORIAL  ###
 ###################
 
@@ -634,7 +704,7 @@ centerer(wonderhoyspersecond, -5, -330)
 centerer(clickstrengthlabel, -5,-310)
 centerer(leftuiwidget,-755,0)
 
-
+nextrack()
 load_data()
 tutorialcheck()
 window.show()
