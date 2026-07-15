@@ -88,7 +88,7 @@ If 1 do not display tutorial on launch.
 If 0 DO display tutorial on launch.
 '''
 
-Paused = False
+Paused = True
 
 current_track = ""
 
@@ -115,7 +115,7 @@ def clickevent():
     global wonderhoys, money, clickstrength
 
     wonderhoys += clickstrength
-    money.setText(f"Wonderhoys: {wonderhoys}")
+    money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
     wondahoy.play(loops=0)
 
 
@@ -156,12 +156,36 @@ centerer(emubutton, 0, -100)
 
 emubutton.clicked.connect(clickevent)
 
-money = QLabel(f"Wonderhoys: {wonderhoys}")
+def format_number(num):
+    if num < 1000:
+        return str(int(num))
+
+    suffixes = [
+        "", "K", "M", "B", "T",
+        "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+        "Dc", "UDc", "DDc", "TDc", "QaDc", "QiDc", "SxDc", "SpDc", "OcDc", "NoDc",
+        "Vg", "UVg", "DVg", "TVg", "QaVg", "QiVg", "SxVg", "SpVg", "OcVg", "NoVg",
+        "Tg"
+    ]
+
+    original = float(num)
+    scaled = original
+    magnitude = 0
+    while abs(scaled) >= 1000 and magnitude < len(suffixes) - 1:
+        magnitude += 1
+        scaled /= 1000.0
+
+    if magnitude == len(suffixes) - 1 and abs(scaled) >= 1000:
+        return f"{original:.3e}"
+
+    return f"{scaled:.2f}{suffixes[magnitude]}"
+
+money = QLabel(f"Wonderhoys: {format_number(wonderhoys)}")
 '''
 ONLY THE VISUAL LABEL OF THE WONDERHOYS DISPLAYED FOR THE USER (goto wonderhoys variable to edit that)
 '''
 money.setParent(mainwidget)
-money.resize(250,140)
+money.resize(300,140)
 money.setObjectName("money")
 money.setAlignment(Qt.AlignCenter)
 money.setStyleSheet(""" 
@@ -195,7 +219,7 @@ wonderhoyspersecond = QLabel(f"WPS: {clickspersecond}")
 label for WPS on the UI (NOT THE VARIABLE FOR WPS! goto clickspersecond to edit that variable!)
 '''
 wonderhoyspersecond.setParent(mainwidget)
-wonderhoyspersecond.resize(100,100)
+wonderhoyspersecond.resize(200,100)
 wonderhoyspersecond.setObjectName("details")
 wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
@@ -207,7 +231,7 @@ def tick():
     global clickspersecond, wonderhoys, tutorialfinished
     print(tutorialfinished)
     wonderhoys += clickspersecond
-    money.setText(f"Wonderhoys: {wonderhoys}")
+    money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
 
 timer = QTimer()
 timer.timeout.connect(tick)
@@ -218,7 +242,7 @@ clickstrengthlabel = QLabel(f"ClickPow:{clickstrength}")
 label for ClickPow on the UI (goto clickstrength to edit the variable.)
 '''
 clickstrengthlabel.setParent(mainwidget)
-clickstrengthlabel.resize(100,100)
+clickstrengthlabel.resize(200,100)
 clickstrengthlabel.setObjectName("details")
 clickstrengthlabel.setAlignment(Qt.AlignCenter)
 
@@ -252,14 +276,15 @@ click_upgrades = [
 ]
 
 wps_upgrades = [
-    {"name": "WPS Boost 1", 
-     "base_cost": 25, 
-     "growth_rate": 1.15, 
-     "power_per_purchase": 1, 
-     "owned": saved_wps.get("WPS Boost 1", 0), 
-     "type": "wps", 
-     "button": None,
-     "flavortext": "Flavatext for wps1!"
+    {
+        "name": "WPS Boost 1", 
+        "base_cost": 25, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 1, 
+        "owned": saved_wps.get("WPS Boost 1", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "Flavatext for wps1!"
     }
 ]
 
@@ -268,7 +293,8 @@ def current_cost(upgrade):
 
 def update_button_text(upgrade):
     cost = current_cost(upgrade)
-    upgrade["button"].setText(f"{upgrade['name']} (Owned: {upgrade['owned']})\nPrice: {cost}\nAdds: {upgrade['power_per_purchase']} ClickPow!")
+    upgrade["button"].setText(
+        f"{upgrade['name']} (Owned: {upgrade['owned']})\n"f"Price: {format_number(cost)}\n"f"Adds: {format_number(upgrade['power_per_purchase'])} ClickPow!")
     button.setToolTip(f"{upgrade['flavortext']}")
 
 def buy_upgrade(upgrade):
@@ -284,12 +310,12 @@ def buy_upgrade(upgrade):
 
     if upgrade["type"] == "click":
         clickstrength += upgrade["power_per_purchase"]
-        clickstrengthlabel.setText(f"ClickPow: {clickstrength}")
+        clickstrengthlabel.setText(f"ClickPow: {format_number(clickstrength)}")
     elif upgrade["type"] == "wps":
         clickspersecond += upgrade["power_per_purchase"]
-        wonderhoyspersecond.setText(f"WPS: {clickspersecond}")
+        wonderhoyspersecond.setText(f"WPS: {format_number(clickspersecond)}")
 
-    money.setText(f"Wonderhoys: {wonderhoys}")
+    money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
     update_button_text(upgrade)
 
 ###################
@@ -402,14 +428,6 @@ for upgrade in click_upgrades:
     update_button_text(upgrade)
     firstpagelayout.addWidget(button)
 firstpagelayout.addStretch()
-
-
-
-
-
-
-
-
 
 tooltipstyle="""
     QToolTip {
