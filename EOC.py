@@ -29,7 +29,9 @@ def save_data():
         "wonderhoys" : wonderhoys,
         "clickspersecond": clickspersecond,
         "Clickstrength": clickstrength,
-        "Tutorialfinished": tutorialfinished
+        "Tutorialfinished": tutorialfinished,
+        "click_upgrades_owned": {u["name"]: u["owned"] for u in click_upgrades},
+        "wps_upgrades_owned": {u["name"]: u["owned"] for u in wps_upgrades},
     }
     with open(saveloc, "wb") as file:
         pickle.dump(data, file)
@@ -52,7 +54,9 @@ def load_data():
             "wonderhoys": 0,
             "clickspersecond": 1,
             "Clickstrength": 1,
-            "Tutorialfinished": 0
+            "Tutorialfinished": 0,
+            "click_upgrades_owned": {},
+            "wps_upgrades_owned": {}
         }
     
 game_data = load_data()
@@ -219,6 +223,70 @@ clickstrengthlabel.setObjectName("details")
 clickstrengthlabel.setAlignment(Qt.AlignCenter)
 
 ###################
+####  UPGRADES  ###
+###################
+saved_upgrades = game_data.get('click_upgrades_owned', {})
+saved_wps = game_data.get('wps_upgrades_owned', {})
+click_upgrades = [
+    {
+        "name": "Test1",
+        "base_cost": 10,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 1,
+        "owned": saved_upgrades.get("Test1", 0),
+        "button": None,
+        "type": "click"
+    },
+    {
+        "name": "Test2",
+        "base_cost": 15,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 5,
+        "owned": saved_upgrades.get("Test2", 0),
+        "button": None,
+        "type": "click"
+    },
+]
+
+wps_upgrades = [
+    {"name": "WPS Boost 1", "base_cost": 25, "growth_rate": 1.15, "power_per_purchase": 1, "owned": saved_wps.get("WPS Boost 1", 0), "type": "wps", "button": None},
+]
+
+def current_cost(upgrade):
+    return round(upgrade["base_cost"] * (upgrade["growth_rate"] ** upgrade["owned"]))
+
+def update_button_text(upgrade):
+    cost = current_cost(upgrade)
+    upgrade["button"].setText(f"{upgrade['name']} (Owned: {upgrade['owned']})\nPrice: {cost}\nAdds: {upgrade['power_per_purchase']} ClickPow!")
+
+def buy_upgrade(upgrade):
+    global wonderhoys, clickstrength, clickspersecond
+
+    cost = current_cost(upgrade)
+    if wonderhoys < cost:
+        print("Not enough Wonderhoys!")
+        return
+
+    wonderhoys -= cost
+    upgrade["owned"] += 1
+
+    if upgrade["type"] == "click":
+        clickstrength += upgrade["power_per_purchase"]
+        clickstrengthlabel.setText(f"ClickPow: {clickstrength}")
+    elif upgrade["type"] == "wps":
+        clickspersecond += upgrade["power_per_purchase"]
+        wonderhoyspersecond.setText(f"WPS: {clickspersecond}")
+
+    money.setText(f"Wonderhoys: {wonderhoys}")
+    update_button_text(upgrade)
+
+###################
+####  UPGRADES  ###
+###################
+
+
+
+###################
 ##### SHOP UI #####
 ###################
 
@@ -313,8 +381,24 @@ shopcontainerstack.setObjectName("RowScroller")
 # 1st page (click power updates)
 firstpage = QWidget()
 firstpagelayout = QVBoxLayout(firstpage)
-upgrade_button = QPushButton("TestUpg1\nprice: NaN")
-upgrade_button.setToolTip("This is a test upgrade! \nAdds 1 ClickPow for free")
+
+for upgrade in click_upgrades:
+    button = QPushButton()
+    button.setObjectName("Row")
+    button.clicked.connect(lambda checked, u=upgrade: buy_upgrade(u))   # renamed
+    upgrade["button"] = button
+    update_button_text(upgrade)
+    firstpagelayout.addWidget(button)
+firstpagelayout.addStretch()
+
+
+
+
+
+
+
+
+
 tooltipstyle="""
     QToolTip {
         background-color: #ffb8ce;
@@ -346,26 +430,23 @@ rowstyle6 ="""
 }
 """
 app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5 + rowstyle6)
-upgrade_button.setObjectName("Row")
-firstpagelayout.addWidget(upgrade_button)
 firstpagelayout.addStretch()
 
-def firstclickupg():
-    global clickstrength
-
-    clickstrength += 1
-    clickstrengthlabel.setText(f"ClickPow: {clickstrength}")
-    print(clickstrength)
 
 
-upgrade_button.clicked.connect(firstclickupg)
 
 # 2nd page
 secondpage = QWidget()
 secondpagelayout = QVBoxLayout(secondpage)
-upgrade_button = QPushButton(f"TestUpg2\nprice: NaN")
-upgrade_button.setObjectName("Row")
-secondpagelayout.addWidget(upgrade_button)
+
+for upgrade in wps_upgrades:
+    button = QPushButton()
+    button.setObjectName("Row")
+    button.clicked.connect(lambda checked, u=upgrade: buy_upgrade(u))
+    upgrade["button"] = button
+    update_button_text(upgrade)
+    secondpagelayout.addWidget(button)
+
 secondpagelayout.addStretch()
 
 shopcontainerstack.addWidget(firstpage)
@@ -698,6 +779,11 @@ def tutorialdisplay():
 ###################
 ####  TUTORIAL  ###
 ###################
+
+
+
+
+
 centerer(shopmainwidget, 755 , 0)
 centerer(money, -5, -350)
 centerer(wonderhoyspersecond, -5, -330)
