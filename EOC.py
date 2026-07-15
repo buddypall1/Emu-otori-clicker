@@ -52,7 +52,7 @@ def load_data():
         QMessageBox.warning(window, "Warning!", "Save data corrupt or not found! (Normal on first time launch) Resetting..")
         return {
             "wonderhoys": 0,
-            "clickspersecond": 1,
+            "clickspersecond": 0,
             "Clickstrength": 1,
             "Tutorialfinished": 0,
             "click_upgrades_owned": {},
@@ -265,10 +265,60 @@ click_upgrades = [
     },
     {
         "name": "Test2",
-        "base_cost": 15,
+        "base_cost": 100,
         "growth_rate": 1.15,   
-        "power_per_purchase": 5,
+        "power_per_purchase": 3,
         "owned": saved_upgrades.get("Test2", 0),
+        "button": None,
+        "type": "click",
+        "flavortext": f"Flavortext test for upgrade2"
+    },
+    {
+        "name": "Test3",
+        "base_cost": 1500,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 10,
+        "owned": saved_upgrades.get("Test3", 0),
+        "button": None,
+        "type": "click",
+        "flavortext": f"Flavortext test for upgrade2"
+    },
+    {
+        "name": "Test4",
+        "base_cost": 15000,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 35,
+        "owned": saved_upgrades.get("Test4", 0),
+        "button": None,
+        "type": "click",
+        "flavortext": f"Flavortext test for upgrade2"
+    },
+    {
+        "name": "Test5",
+        "base_cost": 30000,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 120,
+        "owned": saved_upgrades.get("Test5", 0),
+        "button": None,
+        "type": "click",
+        "flavortext": f"Flavortext test for upgrade2"
+    },
+    {
+        "name": "Test6",
+        "base_cost": 200000,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 400,
+        "owned": saved_upgrades.get("Test6", 0),
+        "button": None,
+        "type": "click",
+        "flavortext": f"Flavortext test for upgrade2"
+    },
+    {
+        "name": "Test7",
+        "base_cost": 1225000,
+        "growth_rate": 1.15,   
+        "power_per_purchase": 1200,
+        "owned": saved_upgrades.get("Test7", 0),
         "button": None,
         "type": "click",
         "flavortext": f"Flavortext test for upgrade2"
