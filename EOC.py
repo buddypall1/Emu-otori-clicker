@@ -227,6 +227,7 @@ clickstrengthlabel.setAlignment(Qt.AlignCenter)
 ###################
 saved_upgrades = game_data.get('click_upgrades_owned', {})
 saved_wps = game_data.get('wps_upgrades_owned', {})
+
 click_upgrades = [
     {
         "name": "Test1",
@@ -235,7 +236,8 @@ click_upgrades = [
         "power_per_purchase": 1,
         "owned": saved_upgrades.get("Test1", 0),
         "button": None,
-        "type": "click"
+        "type": "click",
+        "flavortext": "Flavortext test for upgrade1 !"
     },
     {
         "name": "Test2",
@@ -244,12 +246,21 @@ click_upgrades = [
         "power_per_purchase": 5,
         "owned": saved_upgrades.get("Test2", 0),
         "button": None,
-        "type": "click"
+        "type": "click",
+        "flavortext": "Flavortext test for upgrade2 !"
     },
 ]
 
 wps_upgrades = [
-    {"name": "WPS Boost 1", "base_cost": 25, "growth_rate": 1.15, "power_per_purchase": 1, "owned": saved_wps.get("WPS Boost 1", 0), "type": "wps", "button": None},
+    {"name": "WPS Boost 1", 
+     "base_cost": 25, 
+     "growth_rate": 1.15, 
+     "power_per_purchase": 1, 
+     "owned": saved_wps.get("WPS Boost 1", 0), 
+     "type": "wps", 
+     "button": None,
+     "flavortext": "Flavatext for wps1!"
+    }
 ]
 
 def current_cost(upgrade):
@@ -258,6 +269,7 @@ def current_cost(upgrade):
 def update_button_text(upgrade):
     cost = current_cost(upgrade)
     upgrade["button"].setText(f"{upgrade['name']} (Owned: {upgrade['owned']})\nPrice: {cost}\nAdds: {upgrade['power_per_purchase']} ClickPow!")
+    button.setToolTip(f"{upgrade['flavortext']}")
 
 def buy_upgrade(upgrade):
     global wonderhoys, clickstrength, clickspersecond
