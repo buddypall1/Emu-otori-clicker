@@ -20,6 +20,9 @@ saveloc = "Data/game_data.dat"
 app = QApplication(sys.argv)
 
 window = QMainWindow()
+window.setWindowIcon(QIcon("wondahoy.ico"))
+window.setWindowTitle("Emu Otori Clicker")
+app.setWindowIcon(QIcon("wondahoy.ico"))
 mainwidget = QWidget()
 mainwidget.setObjectName("background")
 window.setCentralWidget(mainwidget)
