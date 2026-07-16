@@ -7,6 +7,12 @@ import pygame
 import pickle
 from itertools import cycle
 
+
+
+
+# TODO: Bottom UI piece with the characters rooms and chibi forms inside, added when they are purchased for the first time in the shop. 
+
+
 pygame.mixer.init()
 
 saveloc = "Data/game_data.dat"
@@ -104,6 +110,18 @@ mainwidget.setStyleSheet("""
 
 layout = QVBoxLayout()
 mainwidget.setLayout(layout)
+demoUI = QLabel("Warning: This is a DEMO version with barebones functionality. Gameplay and UI is unfinished and subject to change.")
+demoUI.setParent(mainwidget)
+demoUI.resize(900,200)
+demoUI.setObjectName("DemoUI")
+demoUI.setStyleSheet("""
+    #DemoUI{
+    color: gray;   
+    font-size: 15px;    
+    font-weight: bold;
+    }
+
+""")
 
 wondahoy = pygame.mixer.Sound("SFX/WONDERHOY SOUND EFFECT (no background music).mp3")
 wondahoy.set_volume(0.05)
@@ -252,76 +270,74 @@ clickstrengthlabel.setAlignment(Qt.AlignCenter)
 saved_upgrades = game_data.get('click_upgrades_owned', {})
 saved_wps = game_data.get('wps_upgrades_owned', {})
 
+#building ideas: Click upgrades are characters and WPS updgrades are their own separate machines. There will be a 3rd button in the shop that is gonna be for character upgrades which will be accessories and upgrades to Emu and her friends
+
 click_upgrades = [
     {
-        "name": "Test1",
+        "name": "Emu Otori Cloner",
         "base_cost": 10,
         "growth_rate": 1.15,   
         "power_per_purchase": 1,
-        "owned": saved_upgrades.get("Test1", 0),
+        "owned": saved_upgrades.get("Emu Otori Cloner", 0),
         "button": None,
         "type": "click",
-        "flavortext": "Flavortext test for upgrade1 !"
+        "flavortext": "A cloner with Emu's DNA infused into it! Let them take over.",
+        "stat_label": "ClickPow"
     },
     {
-        "name": "Test2",
+        "name": "Kusanagi Nene Summoner",
         "base_cost": 100,
         "growth_rate": 1.15,   
         "power_per_purchase": 3,
-        "owned": saved_upgrades.get("Test2", 0),
+        "owned": saved_upgrades.get("Kusanagi Nene Summoner", 0),
         "button": None,
         "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
+        "flavortext": f"This machine summons Nenes from alternate universes with promises\nof free grapefruits and all the fighting games she could ever want.",
+        "stat_label": "ClickPow"
     },
     {
-        "name": "Test3",
+        "name": "Tenma Tsukasa Summoner",
         "base_cost": 1500,
         "growth_rate": 1.15,   
         "power_per_purchase": 10,
-        "owned": saved_upgrades.get("Test3", 0),
+        "owned": saved_upgrades.get("Tenma Tsukasa Summoner", 0),
         "button": None,
         "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
+        "flavortext": f"This machine summons Tsukasas from alternate universes with promises\nof infinite fame and stardom.",
+        "stat_label": "ClickPow"
     },
     {
-        "name": "Test4",
+        "name": "Kamishiro Rui Summoner",
         "base_cost": 15000,
         "growth_rate": 1.15,   
         "power_per_purchase": 35,
-        "owned": saved_upgrades.get("Test4", 0),
+        "owned": saved_upgrades.get("Kamishiro Rui Summoner", 0),
         "button": None,
         "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
+        "flavortext": f"To be quite honest with you this machine just showed up by itself\nand out came a bunch of this dude.",
+        "stat_label": "ClickPow"
     },
     {
-        "name": "Test5",
+        "name": "Hatsune Miku Summoner",
         "base_cost": 30000,
         "growth_rate": 1.15,   
         "power_per_purchase": 120,
-        "owned": saved_upgrades.get("Test5", 0),
+        "owned": saved_upgrades.get("Hatsune Miku Summoner", 0),
         "button": None,
         "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
+        "flavortext": f"This machine uses dark magic combined with leeks to summon\nalternate versions of Miku from across the multiverse",
+        "stat_label": "ClickPow"
     },
     {
-        "name": "Test6",
+        "name": "The Kasane Teto Glitch",
         "base_cost": 200000,
         "growth_rate": 1.15,   
         "power_per_purchase": 400,
-        "owned": saved_upgrades.get("Test6", 0),
+        "owned": saved_upgrades.get("The Kasane Teto Glitch", 0),
         "button": None,
         "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
-    },
-    {
-        "name": "Test7",
-        "base_cost": 1225000,
-        "growth_rate": 1.15,   
-        "power_per_purchase": 1200,
-        "owned": saved_upgrades.get("Test7", 0),
-        "button": None,
-        "type": "click",
-        "flavortext": f"Flavortext test for upgrade2"
+        "flavortext": f"How'd she make it in here?",
+        "stat_label": "ClickPow"
     },
 ]
 
@@ -334,7 +350,8 @@ wps_upgrades = [
         "owned": saved_wps.get("WPS Boost 1", 0), 
         "type": "wps", 
         "button": None,
-        "flavortext": "Flavatext for wps1!"
+        "flavortext": "Flavatext for wps1!",
+        "stat_label": "WPS"
     }
 ]
 
@@ -344,10 +361,18 @@ def current_cost(upgrade):
 def update_button_text(upgrade):
     cost = current_cost(upgrade)
     upgrade["button"].setText(
-        f"{upgrade['name']} (Owned: {upgrade['owned']})\n"f"Price: {format_number(cost)}\n"f"Adds: {format_number(upgrade['power_per_purchase'])} ClickPow!")
-    upgrade["button"].setToolTip(
-        f"{upgrade['flavortext']}\n adding a combined {upgrade['power_per_purchase']*upgrade['owned']} power!"
+        f"{upgrade['name']} (Owned: {upgrade['owned']})\n"
+        f"Price: {format_number(cost)}\n"
+        f"Adds: {format_number(upgrade['power_per_purchase'])} {upgrade['stat_label']}!"
     )
+
+    if upgrade["owned"] == 0:
+        tooltip_text = f"{upgrade['flavortext']}\nAdds {upgrade['power_per_purchase']} {upgrade['stat_label']} per purchase!"
+    else:
+        combined = upgrade['power_per_purchase'] * upgrade['owned']
+        tooltip_text = f"{upgrade['flavortext']}\nCurrently adding a combined {combined} {upgrade['stat_label']}!"
+
+    upgrade["button"].setToolTip(tooltip_text)
 
 def buy_upgrade(upgrade):
     global wonderhoys, clickstrength, clickspersecond
@@ -490,6 +515,7 @@ tooltipstyle="""
         padding: 6px;
         font-size: 14px;
         font-weight: bold;
+        qproperty-alignment: AlignCenter;
     }
 """
 
@@ -843,7 +869,6 @@ def tutorialdisplay():
 """)
     demomsg.setAlignment(Qt.AlignCenter)
     tutoriallayout.addWidget(demomsg)
-
     demoemu = QLabel()
     demoemupixmap = QPixmap("Images\other\emututorial.png").scaled(100,100, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
     demoemu.setPixmap(demoemupixmap)
@@ -871,7 +896,7 @@ centerer(money, -5, -350)
 centerer(wonderhoyspersecond, -5, -330)
 centerer(clickstrengthlabel, -5,-310)
 centerer(leftuiwidget,-755,0)
-
+centerer(demoUI, 60,480)
 nextrack()
 load_data()
 tutorialcheck()
