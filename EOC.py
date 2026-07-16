@@ -38,6 +38,8 @@ def save_data():
         "Tutorialfinished": tutorialfinished,
         "click_upgrades_owned": {u["name"]: u["owned"] for u in click_upgrades},
         "wps_upgrades_owned": {u["name"]: u["owned"] for u in wps_upgrades},
+        "Wondavolume": wondavolume,
+        "wondamuted": iswondamuted
     }
     with open(saveloc, "wb") as file:
         pickle.dump(data, file)
@@ -62,7 +64,9 @@ def load_data():
             "Clickstrength": 1,
             "Tutorialfinished": 0,
             "click_upgrades_owned": {},
-            "wps_upgrades_owned": {}
+            "wps_upgrades_owned": {},
+            "Wondavolume": 0.05,
+            "wondamuted": False
         }
     
 game_data = load_data()
@@ -94,6 +98,10 @@ If 1 do not display tutorial on launch.
 If 0 DO display tutorial on launch.
 '''
 
+wondavolume = game_data['Wondavolume']
+
+iswondamuted = game_data['wondamuted']
+print(iswondamuted)
 Paused = False
 
 current_track = ""
@@ -124,7 +132,7 @@ demoUI.setStyleSheet("""
 """)
 
 wondahoy = pygame.mixer.Sound("SFX/WONDERHOY SOUND EFFECT (no background music).mp3")
-wondahoy.set_volume(0.05)
+wondahoy.set_volume(wondavolume)
 
 def clickevent():
     '''
@@ -203,7 +211,7 @@ money = QLabel(f"Wonderhoys: {format_number(wonderhoys)}")
 ONLY THE VISUAL LABEL OF THE WONDERHOYS DISPLAYED FOR THE USER (goto wonderhoys variable to edit that)
 '''
 money.setParent(mainwidget)
-money.resize(300,140)
+money.resize(400,140)
 money.setObjectName("money")
 money.setAlignment(Qt.AlignCenter)
 money.setStyleSheet(""" 
@@ -232,7 +240,7 @@ rowstyle4 = """
     }
 
 """
-wonderhoyspersecond = QLabel(f"WPS: {clickspersecond}")
+wonderhoyspersecond = QLabel(f"WPS: {format_number(clickspersecond)}")
 '''
 label for WPS on the UI (NOT THE VARIABLE FOR WPS! goto clickspersecond to edit that variable!)
 '''
@@ -242,18 +250,20 @@ wonderhoyspersecond.setObjectName("details")
 wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
 
+TICK_RATE_MS = 50 
+TICKS_PER_SECOND = 1000 / TICK_RATE_MS 
+
 def tick():
     '''
-    main gameloop function, runs every second.
+    main gameloop function
     '''
     global clickspersecond, wonderhoys, tutorialfinished
-    print(tutorialfinished)
-    wonderhoys += clickspersecond
+    wonderhoys += clickspersecond / TICKS_PER_SECOND
     money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
 
 timer = QTimer()
 timer.timeout.connect(tick)
-timer.start(1000)
+timer.start(TICK_RATE_MS)   
 
 clickstrengthlabel = QLabel(f"ClickPow:{clickstrength}")
 '''
@@ -343,16 +353,72 @@ click_upgrades = [
 
 wps_upgrades = [
     {
-        "name": "WPS Boost 1", 
+        "name": "Program Emuification", 
         "base_cost": 25, 
         "growth_rate": 1.15, 
         "power_per_purchase": 1, 
-        "owned": saved_wps.get("WPS Boost 1", 0), 
+        "owned": saved_wps.get("Program Emuification", 0), 
         "type": "wps", 
         "button": None,
-        "flavortext": "Flavatext for wps1!",
+        "flavortext": "Infuses Emu's DNA directly into the program.\nAllowing it to generate wonderhoys passively.",
         "stat_label": "WPS"
-    }
+    },
+    {
+        "name": "Total Emuification", 
+        "base_cost": 500, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 3, 
+        "owned": saved_wps.get("Total Emuification", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "The code is now completely a part of Emu's DNA.",
+        "stat_label": "WPS"
+    },
+    {
+        "name": "DNA Optimization", 
+        "base_cost": 15750, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 10, 
+        "owned": saved_wps.get("DNA Optimization", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "The DNA is stripped of unnecessary code,\nspeeding up its ability to generate wonderhoys.",
+        "stat_label": "WPS"
+    },
+    {
+        "name": "Mutation Nullification", 
+        "base_cost": 57500, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 35, 
+        "owned": saved_wps.get("Mutation Nullification", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "Ceases the DNA's ability to mutate and change.\nProhibiting bad mutations from forming",
+        "stat_label": "WPS"
+    },
+    {
+        "name": "DNA Combination", 
+        "base_cost": 175000, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 120, 
+        "owned": saved_wps.get("DNA Combination", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "Combines all the characters DNA's together into a soup of wonderhoy.",
+        "stat_label": "WPS"
+    },
+    {
+        "name": "DNA Soup Stabilization", 
+        "base_cost": 2000000, 
+        "growth_rate": 1.15, 
+        "power_per_purchase": 400, 
+        "owned": saved_wps.get("DNA Soup Stabilization", 0), 
+        "type": "wps", 
+        "button": None,
+        "flavortext": "Stabilizes the chaotic mixed DNA to maximize wonderhoy production",
+        "stat_label": "WPS"
+    },
+
 ]
 
 def current_cost(upgrade):
@@ -500,7 +566,7 @@ firstpagelayout = QVBoxLayout(firstpage)
 for upgrade in click_upgrades:
     button = QPushButton()
     button.setObjectName("Row")
-    button.clicked.connect(lambda checked, u=upgrade: buy_upgrade(u))   # renamed
+    button.clicked.connect(lambda checked, u=upgrade: buy_upgrade(u))
     upgrade["button"] = button
     update_button_text(upgrade)
     firstpagelayout.addWidget(button)
@@ -575,6 +641,7 @@ shopmainlayout.setSpacing(2)
 
 
 WIPbutton = QPushButton("WIP")
+WIPbutton.setToolTip("I wonder what this'll do?")
 WIPbutton.setObjectName("WIPbutton")
 WIPbutton.setStyleSheet("""
     #WIPbutton{
@@ -649,24 +716,48 @@ upgraderowleft.addWidget(testrowL1)
 #1st page (Settings)
 firstpageleft = QWidget()
 firstpageleftlayout = QVBoxLayout(firstpageleft)
-lefttest = QLabel("This is a test")
-lefttest.setObjectName("Row")
+lefttest = QLabel("Stat tracking is a WIP!\n(to be frank the entire UI for this is WIP)")
+lefttest.setObjectName("Rowbuttonless")
 firstpageleftlayout.addWidget(lefttest)
 firstpageleftlayout.addStretch()
 
 #2nd page (Stats)
 secondpageleft = QWidget()
 secondpageleftlayout = QVBoxLayout(secondpageleft)
-lefttest2 = QLabel("This is ALSO a test")
+lefttest2 = QLabel("WIP settings")
+muteemu = QPushButton("Mute Emu")
 lefttest2.setObjectName("Row")
 secondpageleftlayout.addWidget(lefttest2)
+secondpageleftlayout.addWidget(muteemu)
 secondpageleftlayout.addStretch()
 
+
+
+def emumuter():
+    global wondavolume, wondahoy, iswondamuted
+    if iswondamuted == False:
+        iswondamuted = True
+        wondavolume = 0
+        wondahoy.set_volume(0.00)
+        muteemu.setText("Unmute Emu")
+    else:
+        iswondamuted = False
+        wondavolume = 0.05
+        wondahoy.set_volume(0.05)
+        muteemu.setText("Mute Emu")
+
+def mutechecker():
+    if iswondamuted == True:
+        muteemu.setText("Unmute Emu")
+    else:
+        muteemu.setText("Mute Emu")
+
+muteemu.clicked.connect(emumuter)
 #3rd page (Achievos)
 
 thirdpageleft = QWidget()
 thirdpageleftlayout= QVBoxLayout(thirdpageleft)
-lefttest3 = QLabel("yet ANOTHER test")
+lefttest3 = QLabel("Achievements are WIP!")
 lefttest3.setObjectName("Row")
 thirdpageleftlayout.addWidget(lefttest3)
 thirdpageleftlayout.addStretch()
@@ -891,14 +982,16 @@ def tutorialdisplay():
 
 
 
+
 centerer(shopmainwidget, 755 , 0)
 centerer(money, -5, -350)
 centerer(wonderhoyspersecond, -5, -330)
 centerer(clickstrengthlabel, -5,-310)
 centerer(leftuiwidget,-755,0)
 centerer(demoUI, 60,480)
-nextrack()
 load_data()
+nextrack()
+mutechecker()
 tutorialcheck()
 window.show()
 
