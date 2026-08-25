@@ -900,7 +900,8 @@ def stopmusic():
 
 
 def check_music_playing():
-    if not pygame.mixer.music.get_busy():
+    global Paused
+    if not pygame.mixer.music.get_busy() and Paused == False:
         nextrack() 
 
 musicchecktimer = QTimer()
