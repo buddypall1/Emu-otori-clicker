@@ -6,11 +6,11 @@ from PySide6.QtGui import QFont, QIcon, QPixmap
 import pygame
 import pickle
 from itertools import cycle
+from datetime import timedelta
 
 
 
-
-# TODO: Bottom UI piece with the characters rooms and chibi forms inside, added when they are purchased for the first time in the shop. 
+# TODO: Bottom UI piece with the characters rooms and chibi forms inside, added when they are purchased for the first time in the shop. Other universes. Ascending, improvements to wps
 
 
 pygame.mixer.init()
@@ -43,7 +43,10 @@ def save_data():
         "wps_upgrades_owned": {u["name"]: u["owned"] for u in wps_upgrades},
         "Wondavolume": wondavolume,
         "wondamuted": iswondamuted,
-        "musicpauseonlaunch": musicpauseonlaunch
+        "musicpauseonlaunch": musicpauseonlaunch,
+        "timeplayed": timeplayed,
+        "totalclicks": totalclicks,
+        "totalwondahoys": totalwondahoys
     }
     with open(saveloc, "wb") as file:
         pickle.dump(data, file)
@@ -70,7 +73,11 @@ def load_data():
             "click_upgrades_owned": {},
             "wps_upgrades_owned": {},
             "Wondavolume": 0.05,
-            "wondamuted": False
+            "wondamuted": False,
+            "musicpauseonlaunch": False,
+            "timeplayed": 0,
+            "totalclicks": 0,
+            "totalwondahoys": 0
         }
     
 game_data = load_data()
@@ -80,38 +87,52 @@ This is the variable that the global variables obtain their values from the save
 
 #### SAVE HANDLING ####
 
+#==========================================#
+
 #### GLOBAL VARIABLES ####
 
-wonderhoys = game_data['wonderhoys']
+wonderhoys = game_data.get('wonderhoys', 0)
 '''
 main currency variable (USED TO ADD TO/MODIFY WONDERHOYS)
 '''
-clickspersecond = game_data['clickspersecond']
+clickspersecond = game_data.get('clickspersecond', 0)
 '''
 how many clicks the game does per tick
 '''
-clickstrength = game_data['Clickstrength']
+clickstrength = game_data.get('Clickstrength', 1)
 '''
 how much wonderhoys the user gets from clicking emu
 '''
 
-tutorialfinished = game_data['Tutorialfinished']
+tutorialfinished = game_data.get('Tutorialfinished', 0)
 '''
 checks if the tutorial was fully seen.
 If 1 do not display tutorial on launch.
 If 0 DO display tutorial on launch.
 '''
 
-wondavolume = game_data['Wondavolume']
+wondavolume = game_data.get('Wondavolume', 0.05)
 
-iswondamuted = game_data['wondamuted']
+iswondamuted = game_data.get('wondamuted', False)
 
-musicpauseonlaunch = game_data['musicpauseonlaunch']
+musicpauseonlaunch = game_data.get('musicpauseonlaunch', False)
 Paused = False
 
 current_track = ""
 
 #### GLOBAL VARIABLES ####
+
+#==========================================#
+
+#### STAT TRACKING VARIABLES ####
+
+totalwondahoys = game_data.get("totalwondahoys", 0)
+
+totalclicks = game_data.get("totalclicks", 0)
+
+timeplayed = game_data.get("timeplayed", 0)
+
+#### STAT TRACKING VARIABLES ####
 
 pixmap = QPixmap("Images\other\emu.png").scaled(350,350, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
 
@@ -143,9 +164,11 @@ def clickevent():
     '''
     Ran on user click on emu
     '''
-    global wonderhoys, money, clickstrength
-
+    global wonderhoys, money, clickstrength, totalclicks, totalwondahoys
+    totalclicks += 1
+    totalwondahoys += clickstrength
     wonderhoys += clickstrength
+    totalclickslabel.setText(f"Total Clicks: {totalclicks}")
     money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
     wondahoy.play(loops=0)
 
@@ -255,20 +278,7 @@ wonderhoyspersecond.setObjectName("details")
 wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
 
-TICK_RATE_MS = 50 
-TICKS_PER_SECOND = 1000 / TICK_RATE_MS 
 
-def tick():
-    '''
-    main gameloop function
-    '''
-    global clickspersecond, wonderhoys, tutorialfinished
-    wonderhoys += clickspersecond / TICKS_PER_SECOND
-    money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
-
-timer = QTimer()
-timer.timeout.connect(tick)
-timer.start(TICK_RATE_MS)   
 
 clickstrengthlabel = QLabel(f"ClickPow:{clickstrength}")
 '''
@@ -527,6 +537,8 @@ testrow2.setObjectName("Row")
 
 shopscroller = QScrollArea()
 shopscroller.setWidgetResizable(True)
+
+###### FOR THE DIM IN THE SHOP AND LEFT PANEL ######
 rowstyle2 ="""
     #RowScroller {
     background-color: #b38190;
@@ -538,6 +550,8 @@ rowstyle2 ="""
     
     }
 """
+###### FOR THE DIM IN THE SHOP AND LEFT PANEL ######
+
 shopscroller.setStyleSheet("""
     QScrollBar:vertical {
         background: #fce0ed;
@@ -718,20 +732,31 @@ testrowL1 = QPushButton("Settings")
 testrowL1.setObjectName("Row")
 upgraderowleft.addWidget(testrowL1)
 
-#1st page (Settings)
+#1st page (Stats)
 firstpageleft = QWidget()
 firstpageleftlayout = QVBoxLayout(firstpageleft)
 lefttest = QLabel("Stat tracking is a WIP!\n(to be frank the entire UI for this is WIP)")
+timeplayedlabel = QLabel(f"Time played: {str(timedelta(seconds=timeplayed))}")
+totalclickslabel = QLabel(f"Total Clicks: {totalclicks}")
+totalwondahoyslabel = QLabel(F"Total Wonderhoys: {totalwondahoys}")
 lefttest.setObjectName("Rowbuttonless")
+timeplayedlabel.setObjectName("Rowbuttonless")
+totalclickslabel.setObjectName("Rowbuttonless")
+totalwondahoyslabel.setObjectName("Rowbuttonless")
 firstpageleftlayout.addWidget(lefttest)
+firstpageleftlayout.addWidget(timeplayedlabel)
+firstpageleftlayout.addWidget(totalclickslabel)
+firstpageleftlayout.addWidget(totalwondahoyslabel)
 firstpageleftlayout.addStretch()
 
-#2nd page (Stats)
+#3rd page (Settings)
 secondpageleft = QWidget()
 secondpageleftlayout = QVBoxLayout(secondpageleft)
 lefttest2 = QLabel("WIP settings")
 muteemu = QPushButton("Mute Emu")
+muteemu.setObjectName("Rowbuttonless")
 songoffonlaunch = QPushButton("Pause Music on Launch")
+songoffonlaunch.setObjectName("Rowbuttonless")
 lefttest2.setObjectName("Row")
 secondpageleftlayout.addWidget(lefttest2)
 secondpageleftlayout.addWidget(muteemu)
@@ -783,7 +808,7 @@ def mutechecker():
 
 muteemu.clicked.connect(emumuter)
 songoffonlaunch.clicked.connect(musicmuter)
-#3rd page (Achievos)
+#2nd page (achievos)
 
 thirdpageleft = QWidget()
 thirdpageleftlayout= QVBoxLayout(thirdpageleft)
@@ -851,7 +876,7 @@ musicplayertop.setStyleSheet("""
     }
 """)
 leftuimainlayout.addWidget(musicplayertop)
-currenttrack = QLabel("Current track placeholder")
+currenttrack = QLabel("Paused!")
 currenttrack.setAlignment(Qt.AlignCenter)
 currenttrack.setObjectName("Rowbuttonborderless")
 leftuimainlayout.addWidget(currenttrack)
@@ -1018,7 +1043,32 @@ def tutorialdisplay():
 ###################
 
 
+TICK_RATE_MS = 50 
+TICKS_PER_SECOND = 1000 / TICK_RATE_MS 
 
+def tick():
+    '''
+    main gameloop function
+    '''
+    global clickspersecond, wonderhoys, tutorialfinished, totalwondahoys
+    gain = clickspersecond / TICKS_PER_SECOND
+    wonderhoys += gain
+    totalwondahoys += gain
+    totalwondahoyslabel.setText(f"Total Wonderhoys: {format_number(totalwondahoys)}")
+    money.setText(f"Wonderhoys: {format_number(wonderhoys)}")
+
+timer = QTimer()
+timer.timeout.connect(tick)
+timer.start(TICK_RATE_MS)   
+
+def playtime():
+    global timeplayed, clickspersecond, totalwondahoys
+    timeplayed += 1
+    timeplayedlabel.setText(f"Time played: {str(timedelta(seconds=timeplayed))}")
+
+timerplayed = QTimer()
+timerplayed.timeout.connect(playtime)
+timerplayed.start(1000)   
 
 
 
