@@ -42,7 +42,8 @@ def save_data():
         "click_upgrades_owned": {u["name"]: u["owned"] for u in click_upgrades},
         "wps_upgrades_owned": {u["name"]: u["owned"] for u in wps_upgrades},
         "Wondavolume": wondavolume,
-        "wondamuted": iswondamuted
+        "wondamuted": iswondamuted,
+        "musicpauseonlaunch": musicpauseonlaunch
     }
     with open(saveloc, "wb") as file:
         pickle.dump(data, file)
@@ -104,7 +105,8 @@ If 0 DO display tutorial on launch.
 wondavolume = game_data['Wondavolume']
 
 iswondamuted = game_data['wondamuted']
-print(iswondamuted)
+
+musicpauseonlaunch = game_data['musicpauseonlaunch']
 Paused = False
 
 current_track = ""
@@ -729,9 +731,11 @@ secondpageleft = QWidget()
 secondpageleftlayout = QVBoxLayout(secondpageleft)
 lefttest2 = QLabel("WIP settings")
 muteemu = QPushButton("Mute Emu")
+songoffonlaunch = QPushButton("Pause Music on Launch")
 lefttest2.setObjectName("Row")
 secondpageleftlayout.addWidget(lefttest2)
 secondpageleftlayout.addWidget(muteemu)
+secondpageleftlayout.addWidget(songoffonlaunch)
 secondpageleftlayout.addStretch()
 
 
@@ -749,13 +753,36 @@ def emumuter():
         wondahoy.set_volume(0.05)
         muteemu.setText("Mute Emu")
 
+def musicmuter():
+    global musicpauseonlaunch, Paused
+    if musicpauseonlaunch == False:
+      songoffonlaunch.setText("Unmute Music on Launch")
+      print("MUSICMUTER IS SETTING TO TRUE")
+      musicpauseonlaunch = True
+    else:
+        songoffonlaunch.setText("Mute Music on Launch")
+        print("MUSICMUTER IS SETTING TO FALSE")
+        musicpauseonlaunch = False
+
 def mutechecker():
+    global iswondamuted, musicpauseonlaunch, Paused
     if iswondamuted == True:
         muteemu.setText("Unmute Emu")
     else:
         muteemu.setText("Mute Emu")
+    if musicpauseonlaunch == True:
+        print("MUTE CHECKER IS SETTING TO TRUE")
+        songoffonlaunch.setText("Unmute Music on Launch")
+        Paused = True
+        pausebutton.setText("Unpause")
+    else:
+        print("MUTE CHECKER IS SETTING TO FALSE")
+        songoffonlaunch.setText("Mute Music on Launch")
+    
+
 
 muteemu.clicked.connect(emumuter)
+songoffonlaunch.clicked.connect(musicmuter)
 #3rd page (Achievos)
 
 thirdpageleft = QWidget()
@@ -875,9 +902,12 @@ def play_current_track():
     currenttrack.setText(f"Playing: {track_name}")
 
 def nextrack():
-    global current_index
-    current_index = (current_index + 1) % len(musicfiles)
-    play_current_track()
+    global current_index, Paused
+    if Paused == True:
+        pass
+    else:
+        current_index = (current_index + 1) % len(musicfiles)
+        play_current_track()
 
 
 def prevtrack():
@@ -892,10 +922,12 @@ def stopmusic():
         Paused = True
         pygame.mixer.music.pause()
         print(f"Pause is set to {Paused}")
+        pausebutton.setText("Unpause")
         currenttrack.setText(f"Paused!")
     elif Paused == True:
         Paused = False
         pygame.mixer.music.unpause()
+        pausebutton.setText("Pause")
         currenttrack.setText(f"Playing: {track_name}")
 
 
@@ -997,8 +1029,8 @@ centerer(clickstrengthlabel, -5,-310)
 centerer(leftuiwidget,-755,0)
 centerer(demoUI, 60,480)
 load_data()
-nextrack()
 mutechecker()
+nextrack()
 tutorialcheck()
 window.show()
 
