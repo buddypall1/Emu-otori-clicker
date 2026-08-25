@@ -157,7 +157,7 @@ demoUI.setStyleSheet("""
 
 """)
 
-wondahoy = pygame.mixer.Sound("SFX/WONDERHOY SOUND EFFECT (no background music).mp3")
+wondahoy = pygame.mixer.Sound("SFX/WONDAHOY.mp3")
 wondahoy.set_volume(wondavolume)
 
 def clickevent():
