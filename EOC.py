@@ -903,6 +903,9 @@ def check_music_playing():
     if not pygame.mixer.music.get_busy():
         nextrack() 
 
+musicchecktimer = QTimer()
+musicchecktimer.timeout.connect(check_music_playing)
+musicchecktimer.start(1000)
 
 prevbutton.clicked.connect(prevtrack)
 nextbutton.clicked.connect(nextrack)
