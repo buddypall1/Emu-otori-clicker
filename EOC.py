@@ -144,18 +144,7 @@ mainwidget.setStyleSheet("""
 
 layout = QVBoxLayout()
 mainwidget.setLayout(layout)
-demoUI = QLabel("Warning: This is a DEMO version with barebones functionality. Gameplay and UI is unfinished and subject to change.")
-demoUI.setParent(mainwidget)
-demoUI.resize(900,200)
-demoUI.setObjectName("DemoUI")
-demoUI.setStyleSheet("""
-    #DemoUI{
-    color: gray;   
-    font-size: 15px;    
-    font-weight: bold;
-    }
 
-""")
 
 wondahoy = pygame.mixer.Sound("SFX/WONDAHOY.mp3")
 wondahoy.set_volume(wondavolume)
@@ -206,7 +195,7 @@ def centerer(input, xoffset, yoffset):
     y = (1000 - input.height()) // 2
     input.move(x + xoffset,y + yoffset)
 
-centerer(emubutton, 0, -100)
+centerer(emubutton, 0, -70)
 
 emubutton.clicked.connect(clickevent)
 
@@ -622,7 +611,17 @@ rowstyle6 ="""
     font-weight: bold;
 }
 """
-app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5 + rowstyle6)
+rowstyle7 = """
+    #RoomsRowScroller {
+    background-color: #b38190;
+    color: #ff7aa4;
+    border: 3px solid #ff7aa4;   
+    border-radius: 4px;
+    font-size: 17px;
+    font-weight: bold;
+    }
+"""
+app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5 + rowstyle6 + rowstyle7)
 firstpagelayout.addStretch()
 
 
@@ -974,6 +973,63 @@ pausebutton.clicked.connect(stopmusic)
 ###################
 
 ###################
+#      ROOMS      #
+###################
+
+roomsuicontainer = QWidget()
+roomsuicontainer.setObjectName("RoomsRowScroller")
+roomsuilayout = QHBoxLayout(roomsuicontainer)
+roomsuilayout.setContentsMargins(0,0,0,0)
+roomsuilayout.setSpacing(2)
+
+EmuRoom = QLabel()
+EmuRoom.setText("WIP")
+roomsuilayout.addWidget(EmuRoom)
+roomsuilayout.addStretch()
+
+
+horizontalscroller = QScrollArea()
+horizontalscroller.setObjectName("HorizontalScroller")
+horizontalscroller.setWidget(roomsuicontainer)
+horizontalscroller.setWidgetResizable(True)
+horizontalscroller.setFixedHeight(300) 
+horizontalscroller.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+horizontalscroller.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+horizontalscroller.setStyleSheet("""
+    QScrollArea {
+        background: transparent;
+        border: none;
+    }
+    QScrollBar:horizontal {
+        background: #fce0ed;
+        height: 5px;
+        margin: 0px;
+        border-radius: 5px;
+    }
+    QScrollBar::handle:horizontal {
+        background: #ff7aa4;
+        border-radius: 5px;
+        min-width: 20px;
+    }
+    QScrollBar::handle:horizontal:hover {
+        background: #e66e94;
+    }
+    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+        width: 0px;
+    }
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+        background: none;
+    }
+""")
+
+horizontalscroller.setParent(mainwidget)
+horizontalscroller.resize(1110,0)
+centerer(horizontalscroller, 0, 350)
+###################
+#      ROOMS      #
+###################
+
+###################
 ####  TUTORIAL  ###
 ###################
 
@@ -1042,6 +1098,18 @@ def tutorialdisplay():
 ####  TUTORIAL  ###
 ###################
 
+demoUI = QLabel("Warning: This is a DEMO version with barebones functionality. Gameplay and UI is unfinished and subject to change.")
+demoUI.setParent(mainwidget)
+demoUI.resize(900,200)
+demoUI.setObjectName("DemoUI")
+demoUI.setStyleSheet("""
+    #DemoUI{
+    color: white;   
+    font-size: 15px;    
+    font-weight: bold;
+    }
+
+""")
 
 TICK_RATE_MS = 50 
 TICKS_PER_SECOND = 1000 / TICK_RATE_MS 
