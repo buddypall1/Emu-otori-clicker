@@ -19,6 +19,21 @@ saveloc = "Data/game_data.dat"
 
 app = QApplication(sys.argv)
 
+#### DYNAMIC SCALING ####
+
+DESIGN_WIDTH = 1910
+DESIGN_HEIGHT = 1000
+
+
+TITLEBAR_ALLOWANCE = 30
+
+_screen = app.primaryScreen().availableGeometry()
+scale = min(_screen.width() / DESIGN_WIDTH, (_screen.height() - TITLEBAR_ALLOWANCE) / DESIGN_HEIGHT, 1.0)
+
+def sx(value):
+    return int(round(value * scale))
+#### DYNAMIC SCALING ####
+
 window = QMainWindow()
 window.setWindowIcon(QIcon("wondahoy.ico"))
 window.setWindowTitle("Emu Otori Clicker")
@@ -26,7 +41,7 @@ app.setWindowIcon(QIcon("wondahoy.ico"))
 mainwidget = QWidget()
 mainwidget.setObjectName("background")
 window.setCentralWidget(mainwidget)
-window.setFixedSize(1910,1000)
+window.setFixedSize(sx(1910), sx(1000))
 
 #### SAVE HANDLING ####
 
@@ -134,7 +149,7 @@ timeplayed = game_data.get("timeplayed", 0)
 
 #### STAT TRACKING VARIABLES ####
 
-pixmap = QPixmap("Images\other\emu.png").scaled(350,350, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+pixmap = QPixmap("Images\other\emu.png").scaled(sx(350),sx(350), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
 
 mainwidget.setStyleSheet("""
     #background {
@@ -190,10 +205,11 @@ def centerer(input, xoffset, yoffset):
     INPUT - The widget to center
     XOFFSET - offset on x axis after centering
     YOFFSET - offset on y axis after centering
+    (xoffset/yoffset are given in design-resolution pixels and are scaled internally)
     '''
-    x = (1910 - input.width()) // 2
-    y = (1000 - input.height()) // 2
-    input.move(x + xoffset,y + yoffset)
+    x = (sx(DESIGN_WIDTH) - input.width()) // 2
+    y = (sx(DESIGN_HEIGHT) - input.height()) // 2
+    input.move(x + sx(xoffset),y + sx(yoffset))
 
 centerer(emubutton, 0, -70)
 
@@ -228,33 +244,33 @@ money = QLabel(f"Wonderhoys: {format_number(wonderhoys)}")
 ONLY THE VISUAL LABEL OF THE WONDERHOYS DISPLAYED FOR THE USER (goto wonderhoys variable to edit that)
 '''
 money.setParent(mainwidget)
-money.resize(400,140)
+money.resize(sx(400),sx(140))
 money.setObjectName("money")
 money.setAlignment(Qt.AlignCenter)
-money.setStyleSheet(""" 
-    #money {
+money.setStyleSheet(f""" 
+    #money {{
     background-color: #fce0ed;
     color: #de6a8f;
-    padding-bottom:30px;
-    border: 4px solid #ffb2d7;   
-    border-radius: 4px;
-    font-size: 30px;    
+    padding-bottom:{sx(30)}px;
+    border: {sx(4)}px solid #ffb2d7;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(30)}px;    
     font-weight: bold;
-    }
+    }}
 """)
-rowstyle3 ="""
-    #details{
+rowstyle3 =f"""
+    #details{{
     color: #de6a8f;
-    font-size:18px;
+    font-size:{sx(18)}px;
     font-weight:bold;
-    }
+    }}
 """
-rowstyle4 = """
-    #tutorialtop{
+rowstyle4 = f"""
+    #tutorialtop{{
     color: #de6a8f;
-    font-size:30px;
+    font-size:{sx(30)}px;
     font-weight:bold;
-    }
+    }}
 
 """
 wonderhoyspersecond = QLabel(f"WPS: {format_number(clickspersecond)}")
@@ -262,7 +278,7 @@ wonderhoyspersecond = QLabel(f"WPS: {format_number(clickspersecond)}")
 label for WPS on the UI (NOT THE VARIABLE FOR WPS! goto clickspersecond to edit that variable!)
 '''
 wonderhoyspersecond.setParent(mainwidget)
-wonderhoyspersecond.resize(200,100)
+wonderhoyspersecond.resize(sx(200),sx(100))
 wonderhoyspersecond.setObjectName("details")
 wonderhoyspersecond.setAlignment(Qt.AlignCenter)
 
@@ -274,7 +290,7 @@ clickstrengthlabel = QLabel(f"ClickPow:{clickstrength}")
 label for ClickPow on the UI (goto clickstrength to edit the variable.)
 '''
 clickstrengthlabel.setParent(mainwidget)
-clickstrengthlabel.resize(200,100)
+clickstrengthlabel.resize(sx(200),sx(100))
 clickstrengthlabel.setObjectName("details")
 clickstrengthlabel.setAlignment(Qt.AlignCenter)
 
@@ -478,43 +494,43 @@ def buy_upgrade(upgrade):
 shopmainwidget = QWidget()
 shopmainlayout = QVBoxLayout()
 shopmainwidget.setLayout(shopmainlayout)
-shopmainwidget.resize(400,1000)
+shopmainwidget.resize(sx(400),sx(1000))
 shopmainwidget.setParent(mainwidget)
 shopmainwidget.setObjectName("Row")
 
 
 shoptitle = QLabel("Shop!")
 shoptitle.setAlignment(Qt.AlignCenter)
-shoptitle.resize(200,10)
+shoptitle.resize(sx(200),sx(10))
 shoptitle.setObjectName("Shopname")
-shoptitle.setStyleSheet("""
-    #Shopname{
+shoptitle.setStyleSheet(f"""
+    #Shopname{{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 5px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 65px;
+    border: {sx(5)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(65)}px;
     font-weight: bold;
-    }
+    }}
 """)
 shopmainlayout.addWidget(shoptitle)
-rowstyle ="""
-    #Row {
+rowstyle =f"""
+    #Row {{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 3px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 17px;
+    border: {sx(3)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(17)}px;
     font-weight: bold;
-    }
-    #Row:hover{
+    }}
+    #Row:hover{{
     background-color: #f0adc2;
-    }
-    #Row:pressed{
-    padding-top:2px;
+    }}
+    #Row:pressed{{
+    padding-top:{sx(2)}px;
     background-color: #e6a6b9;
     color: white;
-    }
+    }}
 """
 
 upgraderow = QHBoxLayout()
@@ -528,40 +544,40 @@ shopscroller = QScrollArea()
 shopscroller.setWidgetResizable(True)
 
 ###### FOR THE DIM IN THE SHOP AND LEFT PANEL ######
-rowstyle2 ="""
-    #RowScroller {
+rowstyle2 =f"""
+    #RowScroller {{
     background-color: #b38190;
     color: #ff7aa4;
-    border: 3px solid #ff7aa4;   
-    border-radius: 4px;
-    font-size: 17px;
+    border: {sx(3)}px solid #ff7aa4;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(17)}px;
     font-weight: bold;
     
-    }
+    }}
 """
 ###### FOR THE DIM IN THE SHOP AND LEFT PANEL ######
 
-shopscroller.setStyleSheet("""
-    QScrollBar:vertical {
+shopscroller.setStyleSheet(f"""
+    QScrollBar:vertical {{
         background: #fce0ed;
-        width: 5px;
+        width: {sx(5)}px;
         margin: 0px;
-        border-radius: 5px;
-    }
-    QScrollBar::handle:vertical {
+        border-radius: {sx(5)}px;
+    }}
+    QScrollBar::handle:vertical {{
         background: #ff7aa4;
-        border-radius: 5px;
-        min-height: 20px;
-    }
-    QScrollBar::handle:vertical:hover {
+        border-radius: {sx(5)}px;
+        min-height: {sx(20)}px;
+    }}
+    QScrollBar::handle:vertical:hover {{
         background: #e66e94;
-    }
-    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    }}
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
         height: 0px;
-    }
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    }}
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
         background: none;
-    }
+    }}
 """)
 
 shopcontainerstack = QStackedWidget()
@@ -580,46 +596,46 @@ for upgrade in click_upgrades:
     firstpagelayout.addWidget(button)
 firstpagelayout.addStretch()
 
-tooltipstyle="""
-    QToolTip {
+tooltipstyle=f"""
+    QToolTip {{
         background-color: #ffb8ce;
         color: #de6a8f;
-        border: 4px solid #de6a8f;
-        border-radius: 4px;
-        padding: 6px;
-        font-size: 14px;
+        border: {sx(4)}px solid #de6a8f;
+        border-radius: {sx(4)}px;
+        padding: {sx(6)}px;
+        font-size: {sx(14)}px;
         font-weight: bold;
         qproperty-alignment: AlignCenter;
-    }
+    }}
 """
 
-rowstyle5 ="""
-    #Rowbuttonless {
+rowstyle5 =f"""
+    #Rowbuttonless {{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 3px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 17px;
+    border: {sx(3)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(17)}px;
     font-weight: bold;
-}
+}}
 """
-rowstyle6 ="""
-    #Rowbuttonborderless {
+rowstyle6 =f"""
+    #Rowbuttonborderless {{
     background-color: #ffb8ce;
     color: #de6a8f;
-    font-size: 17px;
+    font-size: {sx(17)}px;
     font-weight: bold;
-}
+}}
 """
-rowstyle7 = """
-    #RoomsRowScroller {
+rowstyle7 = f"""
+    #RoomsRowScroller {{
     background-color: #b38190;
     color: #ff7aa4;
-    border: 3px solid #ff7aa4;   
-    border-radius: 4px;
-    font-size: 17px;
+    border: {sx(3)}px solid #ff7aa4;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(17)}px;
     font-weight: bold;
-    }
+    }}
 """
 app.setStyleSheet(rowstyle + rowstyle2 + rowstyle3 + tooltipstyle + rowstyle4 + rowstyle5 + rowstyle6 + rowstyle7)
 firstpagelayout.addStretch()
@@ -661,23 +677,23 @@ shopmainlayout.setSpacing(2)
 WIPbutton = QPushButton("WIP")
 WIPbutton.setToolTip("I wonder what this'll do?")
 WIPbutton.setObjectName("WIPbutton")
-WIPbutton.setStyleSheet("""
-    #WIPbutton{
+WIPbutton.setStyleSheet(f"""
+    #WIPbutton{{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 3px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 40px;
+    border: {sx(3)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(40)}px;
     font-weight: bold;
-    }
-    #WIPbutton:hover{
+    }}
+    #WIPbutton:hover{{
     background-color: #f0adc2;
-    }
-    #WIPbutton:pressed{
-    padding-top:2px;
+    }}
+    #WIPbutton:pressed{{
+    padding-top:{sx(2)}px;
     background-color: #e6a6b9;
     color: white;
-    }
+    }}
 """)
 shopmainlayout.addWidget(WIPbutton)
 
@@ -695,23 +711,23 @@ leftuicontainerstack.setObjectName("RowScroller")
 leftuiwidget = QWidget()
 leftuimainlayout = QVBoxLayout()
 leftuiwidget.setLayout(leftuimainlayout)
-leftuiwidget.resize(400,1000)
+leftuiwidget.resize(sx(400),sx(1000))
 leftuiwidget.setParent(mainwidget)
 leftuiwidget.setObjectName("Row")
 
 leftuilabel = QLabel("Info!")
 leftuilabel.setAlignment(Qt.AlignCenter)
-leftuilabel.resize(200,10)
+leftuilabel.resize(sx(200),sx(10))
 leftuilabel.setObjectName("Shopname")
-leftuilabel.setStyleSheet("""
-    #Shopname{
+leftuilabel.setStyleSheet(f"""
+    #Shopname{{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 5px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 65px;
+    border: {sx(5)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(65)}px;
     font-weight: bold;
-    }
+    }}
 """)
 leftuimainlayout.addWidget(leftuilabel)
 leftuimainlayout.setContentsMargins(0, 0, 0, 0)
@@ -828,35 +844,35 @@ leftuiscroller = QScrollArea()
 leftuiscroller.setObjectName("Leftscroller")
 leftuiscroller.setWidget(leftuicontainerstack)
 leftuiscroller.setWidgetResizable(True)
-leftuiscroller.setStyleSheet("""
-    QScrollBar:vertical {
+leftuiscroller.setStyleSheet(f"""
+    QScrollBar:vertical {{
         background: #fce0ed;
-        width: 5px;
+        width: {sx(5)}px;
         margin: 0px;
-        border-radius: 5px;
-    }
-    QScrollBar::handle:vertical {
+        border-radius: {sx(5)}px;
+    }}
+    QScrollBar::handle:vertical {{
         background: #ff7aa4;
-        border-radius: 5px;
-        min-height: 20px;
-    }
-    QScrollBar::handle:vertical:hover {
+        border-radius: {sx(5)}px;
+        min-height: {sx(20)}px;
+    }}
+    QScrollBar::handle:vertical:hover {{
         background: #e66e94;
-    }
-    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    }}
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
         height: 0px;
-    }
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    }}
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
         background: none;
-    }
-    #Leftscroller {
+    }}
+    #Leftscroller {{
     background-color: #b38190;
     color: #ff7aa4;
-    border: 3px solid #ff7aa4;   
-    border-radius: 4px;
-    font-size: 17px;
+    border: {sx(3)}px solid #ff7aa4;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(17)}px;
     font-weight: bold;
-    }
+    }}
 """)
 leftuimainlayout.addLayout(upgraderowleft)
 leftuimainlayout.addWidget(leftuiscroller)
@@ -864,15 +880,15 @@ leftuimainlayout.addWidget(leftuiscroller)
 musicplayertop = QLabel("Music Player")
 musicplayertop.setAlignment(Qt.AlignCenter)
 musicplayertop.setObjectName("musicplayertop")
-musicplayertop.setStyleSheet("""
-    #musicplayertop{
+musicplayertop.setStyleSheet(f"""
+    #musicplayertop{{
     background-color: #ffb8ce;
     color: #de6a8f;
-    border: 3px solid #de6a8f;   
-    border-radius: 4px;
-    font-size: 25px;
+    border: {sx(3)}px solid #de6a8f;   
+    border-radius: {sx(4)}px;
+    font-size: {sx(25)}px;
     font-weight: bold;
-    }
+    }}
 """)
 leftuimainlayout.addWidget(musicplayertop)
 currenttrack = QLabel("Paused!")
@@ -992,38 +1008,38 @@ horizontalscroller = QScrollArea()
 horizontalscroller.setObjectName("HorizontalScroller")
 horizontalscroller.setWidget(roomsuicontainer)
 horizontalscroller.setWidgetResizable(True)
-horizontalscroller.setFixedHeight(300) 
+horizontalscroller.setFixedHeight(sx(300)) 
 horizontalscroller.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 horizontalscroller.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-horizontalscroller.setStyleSheet("""
-    QScrollArea {
+horizontalscroller.setStyleSheet(f"""
+    QScrollArea {{
         background: transparent;
         border: none;
-    }
-    QScrollBar:horizontal {
+    }}
+    QScrollBar:horizontal {{
         background: #fce0ed;
-        height: 5px;
+        height: {sx(5)}px;
         margin: 0px;
-        border-radius: 5px;
-    }
-    QScrollBar::handle:horizontal {
+        border-radius: {sx(5)}px;
+    }}
+    QScrollBar::handle:horizontal {{
         background: #ff7aa4;
-        border-radius: 5px;
-        min-width: 20px;
-    }
-    QScrollBar::handle:horizontal:hover {
+        border-radius: {sx(5)}px;
+        min-width: {sx(20)}px;
+    }}
+    QScrollBar::handle:horizontal:hover {{
         background: #e66e94;
-    }
-    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    }}
+    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
         width: 0px;
-    }
-    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    }}
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {{
         background: none;
-    }
+    }}
 """)
 
 horizontalscroller.setParent(mainwidget)
-horizontalscroller.resize(1110,0)
+horizontalscroller.resize(sx(1110),0)
 centerer(horizontalscroller, 0, 350)
 ###################
 #      ROOMS      #
@@ -1052,13 +1068,13 @@ def tutorialdisplay():
     background-color: rgba(0,0,0,150);
     }
     """)
-    dimmer.resize(1910, 1000)
+    dimmer.resize(sx(1910), sx(1000))
     dimmer.move(0,0)
     ### Background dimmer ###
 
     tutorial = QWidget(dimmer)
     tutorial.setObjectName("Rowbuttonless")
-    tutorial.resize(700,455)
+    tutorial.resize(sx(700),sx(455))
     centerer(tutorial, 0,0)
     tutoriallayout = QVBoxLayout(tutorial)
     tutoriallayout.setObjectName("Row")
@@ -1071,17 +1087,17 @@ def tutorialdisplay():
 
     demomsg = QLabel("Hello! Welcome to Emu Otori Clicker!\nThis message is here to tell you the game is currently only a DEMO!!!\nUI and gameplay may change as development continues!\nThis version has limited functionality!! Keep up with updates on the Itch.io page!\nI post devlogs as i work on the game!\nAnyways! I hope you enjoy my silly little clicker game :D It is tons of fun to make!\nThis will be the Tutorial screen later so uhh.. terminology!\n\nWPS: Wonderhoys Per Second! (How many Wonderhoys you make per second automatically)\nUpgrade this in the WPS upgrades section in the shop!\n(This is all the tutorial has for now. uhh.. upgrade your stuff and click lots!)\nThere are things like Ascension planned that will give you a reason to actually play!!!")
     demomsg.setObjectName("demotxt")
-    demomsg.setStyleSheet("""
-    #demotxt{
+    demomsg.setStyleSheet(f"""
+    #demotxt{{
     color: #de6a8f;
-    font-size:15px;
+    font-size:{sx(15)}px;
     font-weight:bold;
-    }
+    }}
 """)
     demomsg.setAlignment(Qt.AlignCenter)
     tutoriallayout.addWidget(demomsg)
     demoemu = QLabel()
-    demoemupixmap = QPixmap("Images\other\emututorial.png").scaled(100,100, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+    demoemupixmap = QPixmap("Images\other\emututorial.png").scaled(sx(100),sx(100), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
     demoemu.setPixmap(demoemupixmap)
     demoemu.setAlignment(Qt.AlignCenter)
     tutoriallayout.addWidget(demoemu)
@@ -1100,14 +1116,14 @@ def tutorialdisplay():
 
 demoUI = QLabel("Warning: This is a DEMO version with barebones functionality. Gameplay and UI is unfinished and subject to change.")
 demoUI.setParent(mainwidget)
-demoUI.resize(900,200)
+demoUI.resize(sx(900),sx(200))
 demoUI.setObjectName("DemoUI")
-demoUI.setStyleSheet("""
-    #DemoUI{
+demoUI.setStyleSheet(f"""
+    #DemoUI{{
     color: white;   
-    font-size: 15px;    
+    font-size: {sx(15)}px;    
     font-weight: bold;
-    }
+    }}
 
 """)
 
@@ -1150,6 +1166,7 @@ load_data()
 mutechecker()
 nextrack()
 tutorialcheck()
+window.move(_screen.x(), _screen.y())
 window.show()
 
 
